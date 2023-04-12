@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+  <style>
+    #canvas1,
+    #canvas2 {
+      height: 600px;
+      width: 800px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid white;
+    }
+
+    #canvas1 {
+      z-index: 100;
+    }
+
+    .actions {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <canvas id="canvas1"></canvas> -->
+  <canvas id="canvas1"></canvas>
+  <canvas id="canvas2"></canvas>
+  <div class="actions">
+    <button id="stance">Change stance</button>
+    <div id="showGameSpeed"></div>
+    <input type="range" min="1" max='50' id="gameSpeedSlider">
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
