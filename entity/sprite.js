@@ -1,17 +1,17 @@
-let gameFrame = 0
-
 class Sprite {
     constructor(image, animationStates, x = 0, y = 0) {
-        this.update = this.update.bind(this)
+        this.draw = this.draw.bind(this)
         this.spriteAnimations = []
         this.image = image
         this.spriteWidth = 64
         this.spriteHeight = 64
-        this.currentAnimation = 'rside-walk'
+        this.currentAnimation = 'walk'
         this.animationStates = animationStates
-        this.staggerFrames = 10
+        this.gameFrame = 0
+        this.staggerFrames = 8
         this.x = x
         this.y = y
+        this.showBox = false
         this.generateSpriteAnimations()
     }
 
@@ -33,12 +33,12 @@ class Sprite {
         this.currentAnimation = animation
     }
 
-    update(context) {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-        context.strokeStyle = "red"
-        context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight)
-
-        let position = Math.floor(gameFrame / this.staggerFrames) % this.spriteAnimations[this.currentAnimation].loc.length;
+    draw(context) {
+        if (this.showBox) {
+            context.strokeStyle = "red"
+            context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight)
+        }
+        let position = Math.floor(this.gameFrame / this.staggerFrames) % this.spriteAnimations[this.currentAnimation].loc.length;
         let frameX = this.spriteWidth * position
         let frameY = this.spriteAnimations[this.currentAnimation].loc[position].y
         context.drawImage(
@@ -52,8 +52,7 @@ class Sprite {
             this.spriteWidth,
             this.spriteHeight
         )
-        gameFrame++
-        requestAnimationFrame(() => this.update(context))
+        this.gameFrame++
     }
 }
 
