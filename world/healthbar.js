@@ -13,19 +13,18 @@ export default class HealthBar {
     }
 
     update() {
-        for (let i = 0; i < this.game.player.maxHp + this.game.player.baseArmor; i++) {
+        this.heartContainers = []
+        const maxLife = this.game.player.maxHp + this.game.player.baseArmor
+        for (let i = 0; i < maxLife; i++) {
+            console.log(i < this.game.player.maxHp + this.game.player.baseArmor)
             if (i < this.game.player.baseHp) {
                 this.heartContainers[i] = fullContainer
             } else if (i < this.game.player.maxHp) {
                 this.heartContainers[i] = emptyContainer
-            } else if (this.game.player.baseArmor > 0) {
-                this.heartContainers[i] = armorContainer
             } else {
-                this.heartContainers.slice(i, 1)
+                this.heartContainers[i] = armorContainer
             }
         }
-        console.log(this.heartContainers)
-
     }
 
     draw(context) {
