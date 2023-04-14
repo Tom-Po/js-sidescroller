@@ -1,7 +1,10 @@
+import { checkCollision } from "../utils"
 import Sprite from "./sprite"
 
 const playerImage = new Image()
-playerImage.src = 'sprite.png'
+playerImage.src = '/sprites/entities/sprite.png'
+
+// First sprite
 const playerAnimationStates = [
     {
         name: 'back-arms',
@@ -60,7 +63,7 @@ const playerAnimationStates = [
         frames: 6
     },
     {
-        name: 'pointing',
+        name: 'cast',
         frames: 6
     },
     {
@@ -69,18 +72,57 @@ const playerAnimationStates = [
     },
 ]
 
-const STEP_SIZE = 5
+// Rogue
+const rogueImage = new Image()
+rogueImage.src = '/sprites/entities/rogue.png'
+
+const rogueAnimationStates = [
+    {
+        name: 'idle',
+        frames: 10,
+    },
+    {
+        name: 'gesture',
+        frames: 10,
+    },
+    {
+        name: 'walk',
+        frames: 10,
+    },
+    {
+        name: 'attack',
+        frames: 10,
+    },
+    {
+        name: 'death',
+        frames: 10,
+    },
+]
+
+const SPELL_DURATION_BASE = 500
+const SPELL_COOLDOWN_BASE = 100
+const SPELL_RANGE_BASE = 20
 
 class Character {
     constructor(game) {
         this.game = game
-        this.sprite = new Sprite(playerImage, playerAnimationStates)
-        this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
-        this.sprite.y = game.height - this.sprite.spriteHeight - 40
-        this.x = this.sprite.x
-        this.y = this.sprite.y
-        this.init = this.init.bind(this)
+        this.sprite = new Sprite(rogueImage, rogueAnimationStates)
+        this.x = this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
+        this.y = this.sprite.y = game.height - this.sprite.spriteHeight - 40
+
+        this.baseHp = 3
+        this.maxHp = 3
+        this.baseArmor = 1
         this.moveSpeed = .3
+
+        this.isCasting = false
+
+        this.spellDuration = SPELL_DURATION_BASE
+        this.spellRange = SPELL_RANGE_BASE
+        this.spellCooldown = SPELL_COOLDOWN_BASE
+
+        this.sprite.setAnimation('walk')
+        this.init = this.init.bind(this)
         this.init()
     }
     init() {
@@ -105,36 +147,90 @@ class Character {
                     self.moveDown()
                     break;
                 case ' ':
-                    self.pointing()
+                    self.cast()
+                    break;
+                case 'r':
+                    self.heal()
                 default:
                     break;
             }
         })
-        document.addEventListener('keyup', () => {
-            self.game.gameSpeed = 0
-            self.pointing()
-        })
+
     }
     moveLeft() {
         this.game.gameSpeed = -this.moveSpeed
-        this.sprite.setAnimation('lside-walk')
     }
     moveRight() {
         this.game.gameSpeed = this.moveSpeed
-        this.sprite.setAnimation('walk')
     }
-    moveUp() {
-        this.sprite.setAnimation('back-walk')
-        this.sprite.y -= STEP_SIZE
+
+    heal() {
+        if (this.baseHp < this.maxHp) this.baseHp++
     }
-    moveDown() {
-        this.sprite.setAnimation('front-walk')
-        this.sprite.y += STEP_SIZE
+
+    cast() {
+        if (this.spellCooldown > 0) return
+        else this.spellCooldown = SPELL_COOLDOWN_BASE
+        this.spellRange = 0
+        this.isCasting = true
     }
-    pointing() {
-        this.sprite.setAnimation('pointing')
+
+    getHit() {
+        if (this.baseArmor > 0) {
+            this.baseArmor--
+            return
+        }
+        this.baseHp--
+        if (this.baseHp === 0) {
+            this.sprite.setAnimation('death')
+            this.game.state = "paused"
+        }
     }
+
+    spellDamageCheck() {
+        for (let i = 0; i < this.game.enemies.length; i++) {
+            // Check if enemy is in range of circle
+            const successfullHit = checkCollision(
+                this.x,
+                this.y,
+                this.spellRange,
+                this.game.enemies[i].sprite.x,
+                this.game.enemies[i].sprite.y,
+                0
+            )
+            if (successfullHit) {
+                this.game.enemies[i].alive = false
+            }
+        }
+
+        this.spellDuration--
+        this.spellRange += 3
+        if (this.spellRange > SPELL_RANGE_BASE) this.spellRange = SPELL_RANGE_BASE
+        if (this.spellDuration === 0) {
+            this.spellDuration = SPELL_DURATION_BASE
+            this.spellCooldown = SPELL_COOLDOWN_BASE
+            this.isCasting = false
+        }
+    }
+
+    update() {
+        if (this.isCasting) {
+            this.spellDamageCheck()
+        } else {
+            this.spellCooldown--
+            this.cast()
+        }
+    }
+
     draw(context) {
+        if (this.isCasting) {
+            context.strokeStyle = "#DDEEFF"
+            context.lineWidth = 10
+            context.beginPath()
+            context.arc(this.x + this.sprite.spriteWidth / 2, this.y + this.sprite.spriteHeight / 2, this.spellRange, 0, 2 * Math.PI);
+            context.stroke();
+            context.lineWidth = 1
+        }
         this.sprite.draw(context)
     }
 }
