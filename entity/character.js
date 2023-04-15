@@ -1,4 +1,4 @@
-import { checkCollision } from "../utils"
+import { checkRadialCollision } from "../utils"
 import AnimatedSprite from "./animated-sprite"
 
 const playerImage = new Image()
@@ -191,7 +191,7 @@ class Character {
     spellDamageCheck() {
         for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
             // Check if enemy is in range of circle
-            const successfullHit = checkCollision(
+            const successfullHit = checkRadialCollision(
                 this.x,
                 this.y,
                 this.spellRange,
