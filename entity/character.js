@@ -1,5 +1,5 @@
 import { checkCollision } from "../utils"
-import Sprite from "./sprite"
+import AnimatedSprite from "./animated-sprite"
 
 const playerImage = new Image()
 playerImage.src = '/sprites/entities/sprite.png'
@@ -101,12 +101,14 @@ const rogueAnimationStates = [
 
 const SPELL_DURATION_BASE = 500
 const SPELL_COOLDOWN_BASE = 100
-const SPELL_RANGE_BASE = 20
+const SPELL_RANGE_BASE = 128
 
 class Character {
     constructor(game) {
         this.game = game
-        this.sprite = new Sprite(rogueImage, rogueAnimationStates)
+        this.sprite = new AnimatedSprite(rogueImage, rogueAnimationStates)
+        this.sprite.setAnimation('walk')
+        this.sprite.staggerFrames = 10
         this.x = this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
         this.y = this.sprite.y = game.height - this.sprite.spriteHeight - 40
 
@@ -121,7 +123,6 @@ class Character {
         this.spellRange = SPELL_RANGE_BASE
         this.spellCooldown = SPELL_COOLDOWN_BASE
 
-        this.sprite.setAnimation('walk')
         this.init = this.init.bind(this)
         this.init()
     }
@@ -188,18 +189,18 @@ class Character {
     }
 
     spellDamageCheck() {
-        for (let i = 0; i < this.game.enemies.length; i++) {
+        for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
             // Check if enemy is in range of circle
             const successfullHit = checkCollision(
                 this.x,
                 this.y,
                 this.spellRange,
-                this.game.enemies[i].sprite.x,
-                this.game.enemies[i].sprite.y,
+                this.game.entityManager.enemies[i].sprite.x,
+                this.game.entityManager.enemies[i].sprite.y,
                 0
             )
             if (successfullHit) {
-                this.game.enemies[i].alive = false
+                this.game.entityManager.enemies[i].alive = false
             }
         }
 

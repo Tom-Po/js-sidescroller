@@ -2,18 +2,17 @@ import './style.css'
 
 import Parallax from './world/parallax'
 import Character from './entity/character'
-import Enemy from './entity/enemy'
 import HealthBar from './world/healthbar'
+import Sprite from './entity/sprite'
+import EntityManager from './entity/entity-manager'
 
-
-const score = document.getElementById('score')
 const gameOver = document.getElementById('gameOver')
 
-// Stable FPS 120 up to 1K - 10K = 30fps
-const ENEMY_COUNT = 10
-const ENEMY_POP_RATE = 1000
+const potionImage = new Image()
+potionImage.src = '/sprites/items/blue-potion.png'
 
 
+// NINI
 // variet attack enemy
 // pulse plutôt que input
 
@@ -27,7 +26,6 @@ const ENEMY_POP_RATE = 1000
 
 
 window.addEventListener('load', function () {
-
     const canvas = document.getElementById('canvas1')
     const ctx = canvas.getContext('2d')
     canvas.width = 800;
@@ -41,8 +39,11 @@ window.addEventListener('load', function () {
             this.gameFrame = 0
 
             this.player = new Character(this)
-            this.enemies = []
-            this.enemyPopRate = ENEMY_POP_RATE
+            this.worldItems = [
+                new Sprite(potionImage, 2)
+            ]
+
+            this.entityManager = new EntityManager(this)
 
             this.parallax = new Parallax(this)
             this.healthBar = new HealthBar(this)
@@ -50,63 +51,37 @@ window.addEventListener('load', function () {
             this.score = 0
             this.state = "playing"
 
-            this.initParallax()
-            this.generateEnemies()
-        }
-
-        initParallax() {
-            this.parallax.addLayer('bg.png', 1)
-            this.parallax.addLayer('bg-buildings2.png', 3)
-            this.parallax.addLayer('bg-path.png', 5)
-            this.parallax.addLayer('bg-buildings.png', 7, true)
-            this.parallax.addLayer('bg-sky.png', 7, true)
-        }
-
-        generateEnemies() {
-            for (let i = 0; i < ENEMY_COUNT; i++) {
-                this.enemies.push(new Enemy(this))
-            }
+            this.parallax.init()
         }
 
         restart() {
             score.innerHTML = 0
             this.player = new Character(this)
             this.parallax = new Parallax(this)
-            this.enemies = []
-            this.generateEnemies()
-            this.initParallax()
+            this.entityManager = new EntityManager(this)
+            this.parallax.init()
             this.state = "playing"
         }
 
-        update() {
-            if (this.gameFrame % this.enemyPopRate === 0) {
-                this.enemyPopRate = this.enemyPopRate - Math.floor(this.score / 100)
-                this.enemies.push(new Enemy(this))
-            }
-        }
+        update() { }
 
         draw() {
             this.parallax.draw(ctx)
 
-            this.enemies.forEach((enemy, idx) => {
-                enemy.update()
-                if (!enemy.alive) {
-                    this.score++
-                    score.innerHTML = this.score
-                    this.enemies.splice(idx, 1)
-                    this.enemies.push(new Enemy(this))
-                }
-                enemy.draw(ctx)
-            })
+            this.entityManager.update()
+            this.entityManager.draw(ctx)
 
             this.player.update()
             this.player.draw(ctx)
+
+            this.worldItems.forEach(item => {
+                item.draw(ctx)
+            })
 
             this.parallax.drawForeground(ctx)
 
             this.healthBar.update()
             this.healthBar.draw(ctx)
-
             this.gameFrame++
         }
     }
@@ -122,7 +97,6 @@ window.addEventListener('load', function () {
     }
 
     function animate(timestamp) {
-
         // perf
         // console.log((game.gameFrame / Math.floor(timestamp / 1000)) + 's')
 

@@ -1,4 +1,4 @@
-import Sprite from "./sprite"
+import AnimatedSprite from "./animated-sprite"
 import { checkCollision } from '../utils'
 const enemyImage = new Image()
 enemyImage.src = '/sprites/entities/enemy.png'
@@ -34,9 +34,9 @@ class Enemy {
     constructor(game) {
         this.game = game
         this.player = this.game.player
-        this.sprite = new Sprite(enemyImage, enemyAnimationStates)
+        this.sprite = new AnimatedSprite(enemyImage, enemyAnimationStates)
         this.sprite.x = Math.random() * this.game.width
-        this.sprite.y = Math.random() * (this.game.height / 2)
+        this.sprite.y = Math.random() * (this.game.height / 4)
         this.sprite.spriteHeight = 42
         this.sprite.spriteWidth = 64
         this.sprite.staggerFrame = 10
@@ -75,7 +75,7 @@ class Enemy {
     }
 
     update() {
-        this.velocity += this.game.score / this.game.enemies.length / 100
+        this.velocity += this.game.score / this.game.entityManager.enemies.length / 100
         if (this.sprite.x < this.player.x) {
             this.directionRatioX = 1
         } else {

@@ -16,7 +16,6 @@ export default class HealthBar {
         this.heartContainers = []
         const maxLife = this.game.player.maxHp + this.game.player.baseArmor
         for (let i = 0; i < maxLife; i++) {
-            console.log(i < this.game.player.maxHp + this.game.player.baseArmor)
             if (i < this.game.player.baseHp) {
                 this.heartContainers[i] = fullContainer
             } else if (i < this.game.player.maxHp) {
