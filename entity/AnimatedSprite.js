@@ -1,8 +1,12 @@
 class AnimatedSprite {
-    constructor(image, animationStates, x = 0, y = 0) {
+    constructor(image, animationStates, x = 0, y = 0, flippedImage = image) {
         this.draw = this.draw.bind(this)
         this.spriteAnimations = []
+
         this.image = image
+        this.flippedImage = flippedImage
+        this.currentImage = this.image
+
         this.spriteWidth = 64
         this.spriteHeight = 64
         this.currentAnimation = 'walk'
@@ -14,6 +18,14 @@ class AnimatedSprite {
         this.showBox = false
         this.generateSpriteAnimations()
         this.isFlipped = false
+    }
+
+    flip() {
+        this.currentImage = this.flippedImage
+    }
+
+    unflip() {
+        this.currentImage = this.image
     }
 
     generateSpriteAnimations() {
@@ -43,7 +55,7 @@ class AnimatedSprite {
         let frameX = this.spriteWidth * position
         let frameY = this.spriteAnimations[this.currentAnimation].loc[position].y
         context.drawImage(
-            this.image,
+            this.currentImage,
             frameX,
             frameY,
             this.spriteWidth,

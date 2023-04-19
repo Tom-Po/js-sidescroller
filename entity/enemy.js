@@ -1,5 +1,4 @@
 import AnimatedSprite from "./AnimatedSprite"
-import { checkRadialCollision } from '../utils'
 
 const batImage = new Image()
 batImage.src = '/sprites/entity/enemy.png'
@@ -63,12 +62,7 @@ export default class Enemy {
         }
     }
 
-    behavior() {
-        this.attacking = checkRadialCollision((this.sprite.x + this.sprite.spriteWidth) / 2, (this.sprite.y + this.sprite.spriteHeight) / 2, this.attackRange, (this.player.sprite.x + this.player.sprite.spriteWidth) / 2, (this.player.sprite.y + this.player.sprite.spriteHeight) / 2, 0)
-        if (this.attacking) {
-            this.velocity = 1
-        } else (this.velocity = .4)
-    }
+    behavior() { }
 
     update() {
         if (this.sprite.x < this.player.sprite.x) {

@@ -75,6 +75,8 @@ const playerAnimationStates = [
 // Rogue
 const rogueImage = new Image()
 rogueImage.src = '/sprites/entity/rogue.png'
+const rogueReverseImage = new Image()
+rogueReverseImage.src = '/sprites/entity/rogue-reverse.png'
 
 const rogueAnimationStates = [
     {
@@ -118,6 +120,7 @@ class Player {
         this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
         this.playerBaseHeight = game.height - this.sprite.spriteHeight - 40
         this.sprite.y = this.playerBaseHeight
+        this.sprite.flippedImage = rogueReverseImage
         this.sprite.showBox = true
 
 
@@ -143,6 +146,7 @@ class Player {
         let self = this;
         document.addEventListener('keyup', () => {
             self.isJumping = false
+            this.game.gameSpeed = 0
         })
         document.addEventListener('keydown', function (e) {
             const { key } = e
@@ -154,10 +158,6 @@ class Player {
                 case 'ArrowRight':
                 case 'd':
                     self.moveRight()
-                    break;
-                case 'ArrowUp':
-                case 'z':
-                    self.moveUp()
                     break;
                 case 'ArrowDown':
                 case 's':
@@ -178,9 +178,11 @@ class Player {
     }
     moveLeft() {
         this.game.gameSpeed = -this.moveSpeed
+        this.sprite.flip()
     }
     moveRight() {
         this.game.gameSpeed = this.moveSpeed
+        this.sprite.unflip()
     }
 
     heal() {

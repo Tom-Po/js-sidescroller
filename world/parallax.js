@@ -29,8 +29,6 @@ class Parallax {
         this.game = game
         this.layers = []
         this.foregroundLayers = []
-        this.draw = this.draw.bind(this)
-        this.drawForeground = this.drawForeground.bind(this)
         this.init()
     }
 
