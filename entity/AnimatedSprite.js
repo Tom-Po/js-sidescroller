@@ -13,6 +13,7 @@ class AnimatedSprite {
         this.y = y
         this.showBox = false
         this.generateSpriteAnimations()
+        this.isFlipped = false
     }
 
     generateSpriteAnimations() {

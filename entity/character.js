@@ -1,8 +1,8 @@
 import { checkRadialCollision } from "../utils"
-import AnimatedSprite from "./animated-sprite"
+import AnimatedSprite from "./AnimatedSprite"
 
 const playerImage = new Image()
-playerImage.src = '/sprites/entities/sprite.png'
+playerImage.src = '/sprites/entity/sprite.png'
 
 // First sprite
 const playerAnimationStates = [
@@ -74,7 +74,7 @@ const playerAnimationStates = [
 
 // Rogue
 const rogueImage = new Image()
-rogueImage.src = '/sprites/entities/rogue.png'
+rogueImage.src = '/sprites/entity/rogue.png'
 
 const rogueAnimationStates = [
     {
@@ -103,31 +103,47 @@ const SPELL_DURATION_BASE = 500
 const SPELL_COOLDOWN_BASE = 100
 const SPELL_RANGE_BASE = 128
 
-class Character {
+
+const JUMP_HEIGHT = 100
+const JUMP_VELOCITY = 100
+
+
+class Player {
     constructor(game) {
         this.game = game
         this.sprite = new AnimatedSprite(rogueImage, rogueAnimationStates)
         this.sprite.setAnimation('walk')
         this.sprite.staggerFrames = 10
-        this.x = this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
-        this.y = this.sprite.y = game.height - this.sprite.spriteHeight - 40
 
-        this.baseHp = 3
-        this.maxHp = 3
-        this.baseArmor = 1
+        this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2
+        this.playerBaseHeight = game.height - this.sprite.spriteHeight - 40
+        this.sprite.y = this.playerBaseHeight
+        this.sprite.showBox = true
+
+
+        this.baseHp = 6
+        this.maxHp = 6
+        this.baseArmor = 2
         this.moveSpeed = .3
 
+        this.isJumping = false
+        this.jumpVelocity = 1
         this.isCasting = false
 
         this.spellDuration = SPELL_DURATION_BASE
         this.spellRange = SPELL_RANGE_BASE
+        this.spellRangeMax = SPELL_RANGE_BASE
         this.spellCooldown = SPELL_COOLDOWN_BASE
 
         this.init = this.init.bind(this)
         this.init()
     }
+
     init() {
         let self = this;
+        document.addEventListener('keyup', () => {
+            self.isJumping = false
+        })
         document.addEventListener('keydown', function (e) {
             const { key } = e
             switch (key) {
@@ -147,11 +163,13 @@ class Character {
                 case 's':
                     self.moveDown()
                     break;
-                case ' ':
+                case 'e':
                     self.cast()
                     break;
                 case 'r':
                     self.heal()
+                case ' ':
+                    if (!self.isJumping) self.isJumping = true
                 default:
                     break;
             }
@@ -192,8 +210,8 @@ class Character {
         for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
             // Check if enemy is in range of circle
             const successfullHit = checkRadialCollision(
-                this.x,
-                this.y,
+                this.sprite.x,
+                this.sprite.y,
                 this.spellRange,
                 this.game.entityManager.enemies[i].sprite.x,
                 this.game.entityManager.enemies[i].sprite.y,
@@ -201,12 +219,13 @@ class Character {
             )
             if (successfullHit) {
                 this.game.entityManager.enemies[i].alive = false
+                // this.spellRangeMax += 5
             }
         }
 
         this.spellDuration--
         this.spellRange += 3
-        if (this.spellRange > SPELL_RANGE_BASE) this.spellRange = SPELL_RANGE_BASE
+        if (this.spellRange > this.spellRangeMax) this.spellRange = this.spellRangeMax
         if (this.spellDuration === 0) {
             this.spellDuration = SPELL_DURATION_BASE
             this.spellCooldown = SPELL_COOLDOWN_BASE
@@ -214,7 +233,21 @@ class Character {
         }
     }
 
+    jump() {
+        if (this.isJumping && this.sprite.y > this.playerBaseHeight - JUMP_HEIGHT) {
+            this.sprite.y -= 1
+        } else {
+            if (this.sprite.y < this.playerBaseHeight) {
+                this.sprite.y += 1
+            } else {
+                this.isJumping = false
+            }
+        }
+
+    }
+
     update() {
+        this.jump()
         if (this.isCasting) {
             this.spellDamageCheck()
         } else {
@@ -228,7 +261,7 @@ class Character {
             context.strokeStyle = "#DDEEFF"
             context.lineWidth = 10
             context.beginPath()
-            context.arc(this.x + this.sprite.spriteWidth / 2, this.y + this.sprite.spriteHeight / 2, this.spellRange, 0, 2 * Math.PI);
+            context.arc(this.sprite.x + this.sprite.spriteWidth / 2, this.sprite.y + this.sprite.spriteHeight / 2, this.spellRange, 0, 2 * Math.PI);
             context.stroke();
             context.lineWidth = 1
         }
@@ -236,4 +269,4 @@ class Character {
     }
 }
 
-export default Character
+export default Player

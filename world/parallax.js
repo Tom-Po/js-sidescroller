@@ -4,7 +4,7 @@ class Layer {
         this.x = 0
         this.y = 0
         this.width = image.width
-        this.height = 600
+        this.height = image.height
         this.image = image
         this.speedModifier = speedModifier
         this.speed = this.game.gameSpeed * this.speedModifier

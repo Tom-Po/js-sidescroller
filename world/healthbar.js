@@ -1,9 +1,9 @@
 const fullContainer = new Image()
-fullContainer.src = '/sprites/items/full-heart-container.png'
+fullContainer.src = '/sprites/item/full-heart-container.png'
 const emptyContainer = new Image()
-emptyContainer.src = '/sprites/items/empty-heart-container.png'
+emptyContainer.src = '/sprites/item/empty-heart-container.png'
 const armorContainer = new Image()
-armorContainer.src = '/sprites/items/armor-container.png'
+armorContainer.src = '/sprites/item/armor-container.png'
 
 export default class HealthBar {
     constructor(game) {
