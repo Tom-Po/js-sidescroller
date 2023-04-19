@@ -1,6 +1,5 @@
 class AnimatedSprite {
     constructor(image, animationStates, x = 0, y = 0, flippedImage = image) {
-        this.draw = this.draw.bind(this)
         this.spriteAnimations = []
 
         this.image = image

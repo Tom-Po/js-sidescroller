@@ -106,7 +106,7 @@ const SPELL_COOLDOWN_BASE = 100
 const SPELL_RANGE_BASE = 128
 
 
-const JUMP_HEIGHT = 100
+const JUMP_HEIGHT = 20
 const JUMP_VELOCITY = 100
 
 
@@ -138,44 +138,41 @@ class Player {
         this.spellRangeMax = SPELL_RANGE_BASE
         this.spellCooldown = SPELL_COOLDOWN_BASE
 
-        this.init = this.init.bind(this)
-        this.init()
-    }
-
-    init() {
-        let self = this;
-        document.addEventListener('keyup', () => {
-            self.isJumping = false
+        window.addEventListener('keyup', () => {
+            this.isJumping = false
             this.game.gameSpeed = 0
         })
-        document.addEventListener('keydown', function (e) {
+
+        window.addEventListener('keydown', e => {
             const { key } = e
             switch (key) {
                 case 'ArrowLeft':
                 case 'q':
-                    self.moveLeft()
+                    this.moveLeft()
                     break;
                 case 'ArrowRight':
                 case 'd':
-                    self.moveRight()
+                    this.moveRight()
                     break;
                 case 'ArrowDown':
                 case 's':
-                    self.moveDown()
+                    this.moveDown()
                     break;
                 case 'e':
-                    self.cast()
+                    this.cast()
                     break;
                 case 'r':
-                    self.heal()
+                    this.heal()
                 case ' ':
-                    if (!self.isJumping) self.isJumping = true
+                    if (!this.isJumping) {
+                        this.isJumping = true
+                    }
                 default:
                     break;
             }
         })
-
     }
+
     moveLeft() {
         this.game.gameSpeed = -this.moveSpeed
         this.sprite.flip()
@@ -235,7 +232,10 @@ class Player {
         }
     }
 
-    jump() {
+
+    update() {
+
+
         if (this.isJumping && this.sprite.y > this.playerBaseHeight - JUMP_HEIGHT) {
             this.sprite.y -= 1
         } else {
@@ -245,11 +245,6 @@ class Player {
                 this.isJumping = false
             }
         }
-
-    }
-
-    update() {
-        this.jump()
         if (this.isCasting) {
             this.spellDamageCheck()
         } else {

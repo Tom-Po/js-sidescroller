@@ -2,6 +2,7 @@ import Player from "./entity/Character"
 import EntityManager from "./entity/EntityManager"
 import Parallax from './world/parallax'
 import HealthBar from './world/healthbar'
+import InputHandler from "./entity/InputHandler"
 
 const canvas = document.getElementById('canvas1')
 const fps = document.getElementById('fps')
@@ -21,6 +22,7 @@ export default class Game {
         this.player = new Player(this)
 
         this.entityManager = new EntityManager(this)
+        this.inputHandler = new InputHandler()
 
         this.parallax = new Parallax(this)
         this.healthBar = new HealthBar(this)
@@ -30,6 +32,7 @@ export default class Game {
         this.logPerformances = true
 
         this.parallax.init()
+
     }
 
     restart() {
