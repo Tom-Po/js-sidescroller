@@ -1,135 +1,35 @@
-import './style.css'
+import './style.css';
 
-import Sprite from './sprite'
-import Parallax from './background'
-import Character from './character'
+import Game from './game';
 
-const canvas = document.getElementById('canvas1')
-const ctx = canvas.getContext('2d')
+// NINI
+// variet attack enemy
+// pulse plutôt que input
 
-const CANVAS_WIDTH = canvas.width = 800;
-const CANVAS_HEIGHT = canvas.height = 600;
+// Maxime Roux AKA PRouty suggestions du 14 avril 2023 AD
+// ajouter un marteau
+// le marteau doit être aussi un shotgun
 
-const playerImage = new Image()
-playerImage.src = 'sprite.png'
-const playerAnimationStates = [
-    {
-        name: 'back-arms',
-        frames: 7,
-    },
-    {
-        name: 'lside-arms',
-        frames: 7,
-    },
-    {
-        name: 'front-arms',
-        frames: 7,
-    },
-    {
-        name: 'rside-arms',
-        frames: 7,
-    },
-    {
-        name: 'back-taunt',
-        frames: 8,
-    },
-    {
-        name: 'lside-taunt',
-        frames: 8,
-    },
-    {
-        name: 'front-taunt',
-        frames: 8,
-    },
-    {
-        name: 'rside-taunt',
-        frames: 8,
-    },
-    {
-        name: 'back-walk',
-        frames: 9,
-    },
-    {
-        name: 'lside-walk',
-        frames: 9,
-    },
-    {
-        name: 'walk',
-        frames: 9,
-    },
-    {
-        name: 'rside-walk',
-        frames: 9,
-    },
-    {
-        name: 'back-pointing',
-        frames: 6
-    },
-    {
-        name: 'lside-pointing',
-        frames: 6
-    },
-    {
-        name: 'pointing',
-        frames: 6
-    },
-    {
-        name: 'rside-pointing',
-        frames: 6
-    },
-]
+// le shotgun fait du coup des attack à distance
 
-const enemyImage = new Image()
-enemyImage.src = 'enemy.png'
-const enemyAnimationStates = [
-    {
-        name: "attack",
-        frames: 4,
-    },
-    {
-        name: "fly",
-        frames: 4,
-    },
-    {
-        name: "hit",
-        frames: 2,
-    },
-    {
-        name: "attack",
-        frames: 4,
-    },
-    {
-        name: "idle",
-        frames: 4,
-    },
-    {
-        name: "rside-walk",
-        frames: 4,
-    },
-]
+// TODO
+// Decoreller movement x y du sprite, garder animation
 
-const playerSprite = new Sprite(playerImage, playerAnimationStates)
+const canvas = document.getElementById('canvas1');
+const ctx = canvas.getContext('2d');
+canvas.width = 1280;
+canvas.height = 600;
 
-class Game {
-    constructor() {
-        this.gameSpeed = 1
-        this.player = new Character(playerSprite, CANVAS_WIDTH / 2, CANVAS_HEIGHT - playerSprite.spriteHeight)
-        this.enemy = new Sprite(enemyImage, enemyAnimationStates)
-        this.parallax = new Parallax()
-        this.init()
-    }
+const launcher = () => {
+  const game = new Game(canvas.width, canvas.height);
 
-    init() {
-        this.parallax.addLayer('bg.png', 1)
-        this.parallax.addLayer('bg1.png', 1.5)
-        this.parallax.addLayer('bg2.png', 2.3)
-    }
+  function animate(timestamp) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    game.update(timestamp);
+    game.draw(ctx);
+    requestAnimationFrame(animate);
+  }
+  animate(game.gameFrame);
+};
 
-    update() {
-        this.parallax.update()
-        this.player.update(ctx)
-    }
-}
-
-const game = new Game()
-game.update()
+window.addEventListener('load', launcher);

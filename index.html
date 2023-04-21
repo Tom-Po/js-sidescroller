@@ -6,39 +6,33 @@
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vite App</title>
-  <style>
-    #canvas1,
-    #canvas2 {
-      height: 600px;
-      width: 800px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid white;
-    }
-
-    #canvas1 {
-      z-index: 100;
-    }
-
-    .actions {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 1000;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="game.css">
 </head>
 
 <body>
   <!-- <canvas id="canvas1"></canvas> -->
   <canvas id="canvas1"></canvas>
-  <canvas id="canvas2"></canvas>
+  <h1 id="score">0</h1>
+  <div class="gameOver" id="gameOver">
+    <h1>Game Over</h1>
+    <div class="container">
+      <div class="key" type="button">
+        <span class="text">Esc</span>
+
+        <div class="angle-shadow left-top top-section"></div>
+        <div class="angle-shadow right-top top-section"></div>
+        <div class="angle-shadow left-bottom bottom-section"></div>
+        <div class="angle-shadow right-bottom bottom-section"></div>
+      </div>
+    </div>
+    <p>Press <b>Escape</b> to replay</p>
+  </div>
+  <div id="gameLogs">
+    <div id="fps">0</div>
+  </div>
   <div class="actions">
-    <button id="stance">Change stance</button>
-    <div id="showGameSpeed"></div>
-    <input type="range" min="1" max='50' id="gameSpeedSlider">
+    <!-- <button id="stance">Change stance</button> -->
   </div>
   <script type="module" src="/main.js"></script>
 </body>
