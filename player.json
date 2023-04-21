@@ -1,0 +1,28 @@
+{
+    "rogue": {
+        "image": "/sprites/entity/rogue.png",
+        "reverseImage": "/sprites/entity/rogue-reverse.png",
+        "animationStates": [
+            {
+                "name": "idle",
+                "frames": 10
+            },
+            {
+                "name": "gesture",
+                "frames": 10
+            },
+            {
+                "name": "walk",
+                "frames": 10
+            },
+            {
+                "name": "attack",
+                "frames": 10
+            },
+            {
+                "name": "death",
+                "frames": 10
+            }
+        ]
+    }
+}

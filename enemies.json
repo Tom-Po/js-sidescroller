@@ -1,0 +1,42 @@
+{
+    "bat": {
+        "image": "/sprites/entity/enemy.png",
+        "reverseImage": "/sprites/entity/enemy-reverse.png",
+        "animationStates": [
+            {
+                "name": "attack",
+                "frames": 4
+            },
+            {
+                "name": "fly",
+                "frames": 4
+            },
+            {
+                "name": "hit",
+                "frames": 2
+            },
+            {
+                "name": "attack",
+                "frames": 4
+            },
+            {
+                "name": "idle",
+                "frames": 4
+            },
+            {
+                "name": "walk",
+                "frames": 4
+            }
+        ]
+    },
+    "slime": {
+        "image": "/sprites/entity/ground-enemy.png",
+        "reverseImage": "/sprites/entity/ground-enemy-reverse.png",
+        "animationStates": [
+            {
+                "name": "walk",
+                "frames": 4
+            }
+        ]
+    }
+}
