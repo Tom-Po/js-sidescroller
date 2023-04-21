@@ -91,12 +91,19 @@ class Player {
   }
 
   update(input) {
+    if (this.sprite.isFreezed) return;
+
+    // Inputs
+    // Movements
+    if (!input.keys.length) {
+      this.sprite.setAnimation('idle');
+    }
     if (input.keys.indexOf('d') > -1 || input.keys.indexOf('ArrowRight') > -1) {
-      this.speed = 5;
+      this.speed = !this.onGround() ? 10 : 5;
       this.game.gameSpeed = 0.3;
       this.sprite.unflip();
     } else if (input.keys.indexOf('q') > -1 || input.keys.indexOf('ArrowLeft') > -1) {
-      this.speed = -5;
+      this.speed = !this.onGround() ? -10 : -5;
       this.game.gameSpeed = -0.3;
       this.sprite.flip();
     } else {
@@ -106,6 +113,17 @@ class Player {
     if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('Space') > -1) && this.onGround()) {
       this.vy -= 20;
     }
+    // Idle
+
+    // Casting
+    if (input.keys.indexOf('e') > -1) {
+      this.isCasting = true;
+      this.spellDamageCheck();
+    } else {
+      this.isCasting = false;
+      this.spellCooldown--;
+    }
+
     // Horizontal move
     this.sprite.x += this.speed;
     if (this.sprite.x < 0) this.sprite.x = 0;
@@ -124,18 +142,10 @@ class Player {
       this.vy = 0;
     }
     if (this.sprite.y > this.playerBaseHeight) this.sprite.y = this.playerBaseHeight;
-
-    // Casting
-    if (input.keys.indexOf('e') > -1) {
-      this.isCasting = true;
-      this.spellDamageCheck();
-    } else {
-      this.isCasting = false;
-      this.spellCooldown--;
-    }
   }
 
   draw(context) {
+    // Temp cast radius
     if (this.isCasting) {
       context.strokeStyle = '#DDEEFF';
       context.lineWidth = 10;
@@ -150,10 +160,13 @@ class Player {
       context.stroke();
       context.lineWidth = 1;
     }
-    this.sprite.draw(context);
+    // Block animation on lastframe of death
+    // and avoid movement while character is dead
     if (this.sprite.currentAnimation === 'death' && this.sprite.position === 9) {
-      this.game.state = 'paused';
+      this.game.state = 'death';
+      this.sprite.isFreezed = true;
     }
+    this.sprite.draw(context);
   }
 }
 

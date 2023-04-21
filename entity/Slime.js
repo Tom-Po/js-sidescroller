@@ -13,9 +13,12 @@ export default class Slime extends Enemy {
     this.sprite.x = this.game.width - this.sprite.spriteWidth;
     this.sprite.y = this.game.height - 100;
     this.sprite.staggerFrames = 30;
+    this.velocity = 3;
   }
 
   update() {
+    if (this.game.state === 'paused' || this.game.state === 'death') return;
+
     // make run in circle
     // sometimes change direction
     // aggro player when close

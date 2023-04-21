@@ -2,8 +2,6 @@ import './style.css';
 
 import Game from './game';
 
-const gameOver = document.getElementById('gameOver');
-
 // NINI
 // variet attack enemy
 // pulse plutôt que input
@@ -23,25 +21,9 @@ canvas.width = 1280;
 canvas.height = 600;
 
 const launcher = () => {
-  let game = new Game(canvas.width, canvas.height);
+  const game = new Game(canvas.width, canvas.height);
 
   function animate(timestamp) {
-    const restartGameEvent = (e) => {
-      if (e.key === 'Escape' || e.key === ' ') {
-        gameOver.style.display = 'none';
-        game = new Game(canvas.width, canvas.height);
-        requestAnimationFrame(animate);
-      }
-    };
-    if (game.state === 'paused') {
-      gameOver.style.display = 'flex';
-      gameOver.addEventListener('click', restartGameEvent);
-      window.addEventListener('keydown', restartGameEvent);
-      return;
-    }
-    gameOver.removeEventListener('click', restartGameEvent);
-    window.removeEventListener('keydown', restartGameEvent);
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     game.update(timestamp);
     game.draw(ctx);

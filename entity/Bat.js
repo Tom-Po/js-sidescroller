@@ -27,6 +27,7 @@ export default class Bat extends Enemy {
   }
 
   update() {
+    if (this.game.state === 'paused' || this.game.state === 'death') return;
     this.velocity += this.game.score / this.game.entityManager.enemies.length / 100;
     if (this.sprite.x < this.player.sprite.x) {
       this.directionRatioX = 1;

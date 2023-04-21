@@ -1,8 +1,8 @@
 import Player from './entity/Player';
 import EntityManager from './entity/EntityManager';
 import Parallax from './world/parallax';
-import HealthBar from './world/healthbar';
 import InputHandler from './entity/InputHandler';
+import HUD from './world/hud';
 
 const canvas = document.getElementById('canvas1');
 const fps = document.getElementById('fps');
@@ -24,7 +24,8 @@ export default class Game {
     this.inputHandler = new InputHandler();
 
     this.parallax = new Parallax(this);
-    this.healthBar = new HealthBar(this);
+
+    this.HUD = new HUD(this);
 
     this.score = 0;
     this.state = 'playing';
@@ -66,10 +67,8 @@ export default class Game {
     this.player.draw(ctx);
 
     this.parallax.drawForeground(ctx);
-
-    this.healthBar.update();
-    this.healthBar.draw(ctx);
-
+    this.HUD.update(this.inputHandler);
+    this.HUD.draw(ctx);
     this.gameFrame++;
   }
 }

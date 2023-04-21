@@ -22,6 +22,7 @@ class AnimatedSprite {
     this.generateSpriteAnimations();
 
     this.isFlipped = false;
+    this.isFreezed = false;
   }
 
   flip() {
@@ -55,9 +56,11 @@ class AnimatedSprite {
       context.strokeStyle = 'red';
       context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
-    this.position = Math.floor(
-      this.gameFrame / this.staggerFrames,
-    ) % this.spriteAnimations[this.currentAnimation].loc.length;
+    if (!this.isFreezed) {
+      this.position = Math.floor(
+        this.gameFrame / this.staggerFrames,
+      ) % this.spriteAnimations[this.currentAnimation].loc.length;
+    }
 
     const frameX = this.spriteWidth * this.position;
     const frameY = this.spriteAnimations[this.currentAnimation].loc[this.position].y;
