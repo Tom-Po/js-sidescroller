@@ -1,6 +1,6 @@
 import Enemies from '../enemies.json';
 import { checkRadialCollision, checkRectangleCollision } from '../utils';
-import AnimatedSprite from './animatedSprite';
+import AnimatedSprite from './animated-sprite';
 import Enemy from './enemy';
 
 export default class Bat extends Enemy {

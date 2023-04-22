@@ -1,6 +1,6 @@
 import Enemies from '../enemies.json';
 import { checkRectangleCollision } from '../utils';
-import AnimatedSprite from './animatedSprite';
+import AnimatedSprite from './animated-sprite';
 import Enemy from './enemy';
 
 export default class Slime extends Enemy {

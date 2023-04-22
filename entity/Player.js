@@ -1,6 +1,6 @@
 import PlayerSprites from '../player.json';
 import { checkRectangleCollision } from '../utils';
-import AnimatedSprite from './animatedSprite.js';
+import AnimatedSprite from './animated-sprite';
 import Spell from './spell';
 import Weapon from './weapon';
 

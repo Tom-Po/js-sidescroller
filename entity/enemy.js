@@ -1,5 +1,5 @@
 import Enemies from '../enemies.json';
-import AnimatedSprite from './animatedSprite';
+import AnimatedSprite from './animated-sprite';
 
 export default class Enemy {
   constructor(game) {

@@ -1,5 +1,5 @@
 import Weapons from '../weapons.json';
-import AnimatedSprite from './animatedSprite';
+import AnimatedSprite from './animated-sprite';
 
 export default class Weapon {
   constructor(player) {

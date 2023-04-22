@@ -1,6 +1,6 @@
-import EntityManager from './entity/EntityManager';
-import InputHandler from './entity/InputHandler';
-import Player from './entity/Player';
+import EntityManager from './entity/entity-manager';
+import InputHandler from './entity/input-handler';
+import Player from './entity/player';
 import HUD from './world/hud';
 import Parallax from './world/parallax';
 
