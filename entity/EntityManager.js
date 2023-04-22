@@ -6,7 +6,7 @@ const potionImage = new Image();
 potionImage.src = './sprites/item/blue-potion.png';
 
 // Stable FPS 120 upto 1K - 10K = 30fps
-const ENEMY_COUNT = 10;
+const ENEMY_COUNT = 100;
 const ENEMY_POP_RATE = 1000;
 
 const score = document.getElementById('score');

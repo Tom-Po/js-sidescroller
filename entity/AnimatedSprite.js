@@ -11,13 +11,15 @@ class AnimatedSprite {
 
     this.spriteWidth = 64;
     this.spriteHeight = 64;
+
     this.currentAnimation = 'walk';
     this.animationStates = animationStates;
+    this.position = 0;
+
     this.gameFrame = 0;
     this.staggerFrames = 8;
     this.x = x;
     this.y = y;
-    this.showBox = false;
 
     this.generateSpriteAnimations();
 

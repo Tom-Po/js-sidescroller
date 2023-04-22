@@ -1,11 +1,9 @@
-import { checkRadialCollision } from '../utils';
+import { checkRectangleCollision } from '../utils';
 import AnimatedSprite from './AnimatedSprite';
 import PlayerSprites from '../player.json';
-// First sprite
+import Weapon from './Weapon';
+import Spell from './Spell';
 
-const SPELL_DURATION_BASE = 500;
-const SPELL_COOLDOWN_BASE = 100;
-const SPELL_RANGE_BASE = 128;
 const MAX_JUMP_HEIGHT = 200;
 
 class Player {
@@ -23,7 +21,6 @@ class Player {
     this.sprite.y = this.playerBaseHeight;
     this.sprite.flippedImage = new Image();
     this.sprite.flippedImage.src = PlayerSprites.rogue.reverseImage;
-    this.sprite.showBox = true;
 
     this.baseHp = 6;
     this.maxHp = 6;
@@ -33,10 +30,8 @@ class Player {
     this.isJumping = false;
     this.jumpVelocity = 1;
 
-    this.spellDuration = SPELL_DURATION_BASE;
-    this.spellRange = SPELL_RANGE_BASE;
-    this.spellRangeMax = SPELL_RANGE_BASE;
-    this.spellCooldown = SPELL_COOLDOWN_BASE;
+    this.spell = new Spell(this);
+    this.weapon = new Weapon(this);
 
     // TODO remove
     this.speed = 0;
@@ -44,8 +39,9 @@ class Player {
     this.weight = 1;
   }
 
-  heal() {
-    if (this.baseHp < this.maxHp) this.baseHp++;
+  die() {
+    this.sprite.setAnimation('death');
+    this.game.gameSpeed = 0;
   }
 
   getHit() {
@@ -55,34 +51,7 @@ class Player {
     }
     this.baseHp--;
     if (this.baseHp === 0) {
-      this.sprite.setAnimation('death');
-    }
-  }
-
-  spellDamageCheck() {
-    for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
-      // Check if enemy is in range of circle
-      const successfullHit = checkRadialCollision(
-        this.sprite.x,
-        this.sprite.y,
-        this.spellRange,
-        this.game.entityManager.enemies[i].sprite.x,
-        this.game.entityManager.enemies[i].sprite.y,
-        0,
-      );
-      if (successfullHit) {
-        this.game.entityManager.enemies[i].alive = false;
-        // this.spellRangeMax += 5
-      }
-    }
-
-    this.spellDuration--;
-    this.spellRange += 3;
-    if (this.spellRange > this.spellRangeMax) this.spellRange = this.spellRangeMax;
-    if (this.spellDuration === 0) {
-      this.spellDuration = SPELL_DURATION_BASE;
-      this.spellCooldown = SPELL_COOLDOWN_BASE;
-      this.isCasting = false;
+      this.die();
     }
   }
 
@@ -90,40 +59,66 @@ class Player {
     return this.sprite.y >= this.playerBaseHeight;
   }
 
-  update(input) {
-    if (this.sprite.isFreezed) return;
+  moveLeft() {
+    this.speed = !this.onGround() ? -10 : -5;
+    this.game.gameSpeed = -0.3;
+    this.sprite.flip();
+    this.weapon.sprite.flip();
+    this.weapon.direction = -1;
+  }
 
+  moveRight() {
+    this.speed = !this.onGround() ? 10 : 5;
+    this.game.gameSpeed = 0.3;
+    this.sprite.unflip();
+    this.weapon.sprite.unflip();
+    this.weapon.direction = 1;
+  }
+
+  manageInput(input) {
     // Inputs
-    // Movements
-    if (!input.keys.length) {
+    // Idle
+    if (!input.keys.length && !this.sprite.currentAnimation === 'death') {
       this.sprite.setAnimation('idle');
     }
+    // Movements
     if (input.keys.indexOf('d') > -1 || input.keys.indexOf('ArrowRight') > -1) {
-      this.speed = !this.onGround() ? 10 : 5;
-      this.game.gameSpeed = 0.3;
-      this.sprite.unflip();
+      this.moveRight();
     } else if (input.keys.indexOf('q') > -1 || input.keys.indexOf('ArrowLeft') > -1) {
-      this.speed = !this.onGround() ? -10 : -5;
-      this.game.gameSpeed = -0.3;
-      this.sprite.flip();
+      this.moveLeft();
     } else {
       this.speed = 0;
       this.game.gameSpeed = 0;
     }
-    if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('Space') > -1) && this.onGround()) {
+    if (input.keys.indexOf('ArrowUp') > -1 && this.onGround()) {
       this.vy -= 20;
     }
-    // Idle
+    if (input.keys.indexOf('Space') > -1) {
+      this.weapon.sprite.isFreezed = false;
+      for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
+        if (checkRectangleCollision(
+          this.weapon.sprite,
+          this.game.entityManager.enemies[i].sprite,
+        )) {
+          this.game.entityManager.enemies[i].die();
+        }
+      }
+    } else {
+      this.weapon.sprite.isFreezed = true;
+      this.weapon.sprite.position = 0;
+    }
 
     // Casting
     if (input.keys.indexOf('e') > -1) {
-      this.isCasting = true;
-      this.spellDamageCheck();
+      this.spell.isCasting = true;
+      this.spell.spellDamageCheck(this.game.entityManager.enemies);
     } else {
-      this.isCasting = false;
+      this.spell.isCasting = false;
       this.spellCooldown--;
     }
+  }
 
+  updatePosition() {
     // Horizontal move
     this.sprite.x += this.speed;
     if (this.sprite.x < 0) this.sprite.x = 0;
@@ -144,29 +139,26 @@ class Player {
     if (this.sprite.y > this.playerBaseHeight) this.sprite.y = this.playerBaseHeight;
   }
 
-  draw(context) {
-    // Temp cast radius
-    if (this.isCasting) {
-      context.strokeStyle = '#DDEEFF';
-      context.lineWidth = 10;
-      context.beginPath();
-      context.arc(
-        this.sprite.x + this.sprite.spriteWidth / 2,
-        this.sprite.y + this.sprite.spriteHeight / 2,
-        this.spellRange,
-        0,
-        2 * Math.PI,
-      );
-      context.stroke();
-      context.lineWidth = 1;
-    }
-    // Block animation on lastframe of death
-    // and avoid movement while character is dead
+  update(input) {
+    if (this.sprite.isFreezed) return;
+    this.sprite.showBox = this.weapon.sprite.showBox = this.game.debug;
+    this.manageInput(input);
+    this.updatePosition();
+    // Block animation on lastframe of death and trigger death screen
+    // avoid sprite position cycle again
     if (this.sprite.currentAnimation === 'death' && this.sprite.position === 9) {
       this.game.state = 'death';
       this.sprite.isFreezed = true;
+      this.game.gameSpeed = 0;
     }
+    this.weapon.update();
+    this.spell.update(input);
+  }
+
+  draw(context) {
+    this.spell.draw(context);
     this.sprite.draw(context);
+    this.weapon.draw(context);
   }
 }
 

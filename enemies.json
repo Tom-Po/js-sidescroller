@@ -1,7 +1,7 @@
 {
     "bat": {
-        "image": "/sprites/entity/enemy.png",
-        "reverseImage": "/sprites/entity/enemy-reverse.png",
+        "image": "/sprites/entity/enemy-reverse.png",
+        "reverseImage": "/sprites/entity/enemy.png",
         "animationStates": [
             {
                 "name": "attack",

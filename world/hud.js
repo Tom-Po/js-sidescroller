@@ -22,6 +22,9 @@ export default class HUD {
         this.game.state = 'playing';
       }
     }
+    if (input.keys.indexOf('p') > -1) {
+      this.game.debug = !this.game.debug;
+    }
   }
 
   draw(context) {

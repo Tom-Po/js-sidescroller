@@ -19,16 +19,17 @@ export default class Game {
     this.deltaTime = 0;
 
     this.player = new Player(this);
-
     this.entityManager = new EntityManager(this);
+
     this.inputHandler = new InputHandler();
 
     this.parallax = new Parallax(this);
 
     this.HUD = new HUD(this);
-
     this.score = 0;
     this.state = 'playing';
+
+    this.debug = false;
     this.logPerformances = true;
 
     this.parallax.init();
@@ -39,6 +40,7 @@ export default class Game {
     this.player = new Player(this);
     this.parallax = new Parallax(this);
     this.entityManager = new EntityManager(this);
+    this.inputHandler = new InputHandler();
     this.parallax.init();
     this.state = 'playing';
     this.lastTime = this.deltaTime = fps.innerHTML = 0;

@@ -16,7 +16,13 @@ export default class Slime extends Enemy {
     this.velocity = 3;
   }
 
+  die() {
+    this.alive = false;
+  }
+
   update() {
+    this.sprite.showBox = this.game.debug;
+
     if (this.game.state === 'paused' || this.game.state === 'death') return;
 
     // make run in circle

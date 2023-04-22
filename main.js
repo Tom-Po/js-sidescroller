@@ -1,6 +1,6 @@
 import './style.css';
 
-import Game from './game';
+import Game from './Game';
 
 // NINI
 // variet attack enemy
@@ -9,7 +9,6 @@ import Game from './game';
 // Maxime Roux AKA PRouty suggestions du 14 avril 2023 AD
 // ajouter un marteau
 // le marteau doit être aussi un shotgun
-
 // le shotgun fait du coup des attack à distance
 
 // TODO

@@ -1,0 +1,12 @@
+{
+    "phammer": {
+        "image": "/sprites/item/weapon/phammer.png",
+        "reverseImage": "/sprites/item/weapon/phammer-reverse.png",
+        "animationStates": [
+            {
+                "name": "active",
+                "frames": 2
+            }
+        ]
+    }
+}
