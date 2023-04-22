@@ -1,4 +1,4 @@
-import Sprite from './Sprite';
+import Sprite from './sprite';
 
 export default class Item extends Sprite {
   constructor(image, scale, x, y, value = 1) {
