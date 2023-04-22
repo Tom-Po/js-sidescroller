@@ -1,6 +1,6 @@
 import './style.css';
 
-import Game from './Game.js';
+import Game from './game';
 
 // NINI
 // variet attack enemy
@@ -10,6 +10,11 @@ import Game from './Game.js';
 // ajouter un marteau
 // le marteau doit être aussi un shotgun
 // le shotgun fait du coup des attack à distance
+
+// POLO
+// ARBRE DE TALENT
+// URGENT
+// SINON PA PY
 
 // Théo
 
