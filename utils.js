@@ -20,12 +20,12 @@ const shootingCirc = {
   y: groundPoint - 200,
   r: 75,
 };
-const getAimCoords = (mousePos) => {
+const getAimCoords = (mousePos, circle) => {
   /* NOTE: angleBetween(p1, p2) is 180deg opposite of angleBetween(p2, p1) */
-  const angle = Math.PI / 2 - angleBetween(mousePos, shootingCirc);
-  const distance = Math.min(distBetween(shootingCirc, mousePos), shootingCirc.r);
-  const x = shootingCirc.x + distance * Math.sin(angle);
-  const y = shootingCirc.y + distance * Math.cos(angle);
+  const angle = Math.PI / 2 - angleBetween(mousePos, circle);
+  const distance = Math.min(distBetween(circle, mousePos), circle.r);
+  const x = circle.x + distance * Math.sin(angle);
+  const y = circle.y + distance * Math.cos(angle);
   return { x, y };
 };
 

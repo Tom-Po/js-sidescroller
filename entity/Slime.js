@@ -1,7 +1,7 @@
+import Enemies from '../enemies.json';
 import { checkRectangleCollision } from '../utils';
 import AnimatedSprite from './AnimatedSprite';
 import Enemy from './Enemy';
-import Enemies from '../enemies.json';
 
 export default class Slime extends Enemy {
   constructor(game) {
@@ -11,7 +11,7 @@ export default class Slime extends Enemy {
     this.sprite.spriteHeight = 32;
     this.sprite.spriteWidth = 32;
     this.sprite.x = this.game.width - this.sprite.spriteWidth;
-    this.sprite.y = this.game.height - 100;
+    this.sprite.y = 540 - 16;
     this.sprite.staggerFrames = 30;
     this.velocity = 3;
   }

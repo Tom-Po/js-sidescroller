@@ -1,8 +1,8 @@
-import Player from './entity/Player';
 import EntityManager from './entity/EntityManager';
-import Parallax from './world/parallax';
 import InputHandler from './entity/InputHandler';
+import Player from './entity/Player';
 import HUD from './world/hud';
+import Parallax from './world/parallax';
 
 const canvas = document.getElementById('canvas1');
 const fps = document.getElementById('fps');
@@ -18,10 +18,10 @@ export default class Game {
     this.lastTime = 0;
     this.deltaTime = 0;
 
+    this.inputHandler = new InputHandler();
+
     this.player = new Player(this);
     this.entityManager = new EntityManager(this);
-
-    this.inputHandler = new InputHandler();
 
     this.parallax = new Parallax(this);
 
@@ -57,19 +57,20 @@ export default class Game {
     }
     this.deltaTime = timestamp - this.lastTime;
     this.lastTime = timestamp;
+
+    this.entityManager.update(this.inputHandler);
+    this.player.update(this.inputHandler);
+    this.HUD.update(this.inputHandler);
   }
 
   draw() {
     this.parallax.draw(ctx);
 
-    this.entityManager.update(this.deltaTime);
     this.entityManager.draw(ctx);
 
-    this.player.update(this.inputHandler);
     this.player.draw(ctx);
 
     this.parallax.drawForeground(ctx);
-    this.HUD.update(this.inputHandler);
     this.HUD.draw(ctx);
     this.gameFrame++;
   }

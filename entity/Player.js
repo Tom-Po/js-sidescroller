@@ -1,8 +1,8 @@
+import PlayerSprites from '../player.json';
 import { checkRectangleCollision } from '../utils';
 import AnimatedSprite from './AnimatedSprite';
-import PlayerSprites from '../player.json';
-import Weapon from './Weapon';
 import Spell from './Spell';
+import Weapon from './Weapon';
 
 const MAX_JUMP_HEIGHT = 200;
 
@@ -81,6 +81,9 @@ class Player {
     if (!input.keys.length && !this.sprite.currentAnimation === 'death') {
       this.sprite.setAnimation('idle');
     }
+    if (input.mouseDown) {
+      this.game.entityManager.fireCurrentProjectile(input.mousePosition);
+    }
     // Movements
     if (input.keys.indexOf('d') > -1 || input.keys.indexOf('ArrowRight') > -1) {
       this.moveRight();
@@ -152,10 +155,12 @@ class Player {
       this.game.gameSpeed = 0;
     }
     this.weapon.update();
+    // this.projectile.update(input);
     this.spell.update(input);
   }
 
   draw(context) {
+    // this.projectile.draw(context);
     this.spell.draw(context);
     this.sprite.draw(context);
     this.weapon.draw(context);
