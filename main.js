@@ -1,6 +1,6 @@
 import './style.css';
 
-import Game from './Game';
+import Game from './Game.js';
 
 // NINI
 // variet attack enemy
