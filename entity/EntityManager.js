@@ -1,7 +1,7 @@
-import Bat from './Bat';
-import Item from './Item';
-import Projectile from './Projectile';
-import Slime from './Slime';
+import Bat from './bat';
+import Item from './item';
+import Projectile from './projectile';
+import Slime from './slime';
 
 const gold = new Image();
 gold.src = './sprites/item/gold.png';
