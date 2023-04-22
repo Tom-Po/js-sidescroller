@@ -1,8 +1,8 @@
 import PlayerSprites from '../player.json';
 import { checkRectangleCollision } from '../utils';
-import AnimatedSprite from './AnimatedSprite';
-import Spell from './Spell';
-import Weapon from './Weapon';
+import AnimatedSprite from './animatedSprite';
+import Spell from './spell';
+import Weapon from './weapon';
 
 const MAX_JUMP_HEIGHT = 200;
 
