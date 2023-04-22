@@ -1,19 +1,29 @@
 import Bat from './Bat';
+import Item from './Item';
 import Projectile from './Projectile';
 import Slime from './Slime';
-import Sprite from './Sprite';
 
-const potionImage = new Image();
-potionImage.src = './sprites/item/blue-potion.png';
+const gold = new Image();
+gold.src = './sprites/item/gold.png';
+const dollar = new Image();
+dollar.src = './sprites/item/dollar.png';
 
 // Stable FPS 120 upto 1K - 10K = 30fps
-const ENEMY_COUNT = 10;
+const ENEMY_COUNT = 100;
 const ENEMY_POP_RATE = 1000;
+const DROP_RATE = 20;
 
 const score = document.getElementById('score');
 
 function getRandomEnemy(game) {
   return Math.random() > 0.5 ? new Bat(game) : new Slime(game);
+}
+
+function getRandomLoot(position) {
+  const loot = Math.random() < 0.2
+    ? { img: dollar, value: 10 }
+    : { img: gold, value: 1 };
+  return new Item(loot.img, 1.5, position.x, position.y, loot.value);
 }
 
 export default class EntityManager {
@@ -26,17 +36,17 @@ export default class EntityManager {
 
     this.projectiles = [new Projectile(
       this,
-      this.player.sprite.x + this.player.sprite.spriteWidth / 2,
-      this.player.sprite.y,
     )];
 
-    this.worldItems = [
-      new Sprite(potionImage, 2),
-    ];
+    this.worldItems = [];
 
     for (let i = 0; i < ENEMY_COUNT; i++) {
       this.enemies.push(getRandomEnemy(this.game));
     }
+  }
+
+  addWorldItem(item) {
+    this.worldItems.push(item);
   }
 
   addProjectile() {
@@ -45,7 +55,7 @@ export default class EntityManager {
     }
     this.projectiles.push(new Projectile(
       this,
-      this.player.sprite.x + this.player.sprite.spriteWidth / 2,
+      this.player.sprite.x + this.player.sprite.spriteWidth,
       this.player.sprite.y,
     ));
   }
@@ -68,6 +78,7 @@ export default class EntityManager {
       this.enemyPopRate -= Math.floor(this.game.score / 100);
       this.addEnemy();
     }
+
     this.projectiles.forEach((p) => {
       const before = p.fired;
       p.update(input);
@@ -75,19 +86,36 @@ export default class EntityManager {
         this.addProjectile();
       }
     });
+
     this.enemies.forEach((enemy, idx) => {
       enemy.update();
       if (!enemy.alive) {
         this.game.score++;
         score.innerHTML = this.game.score;
         this.enemies.splice(idx, 1);
+        if (Math.random() < DROP_RATE / 100) {
+          const loot = getRandomLoot(enemy.sprite);
+          this.addWorldItem(loot);
+        }
         this.addEnemy();
+      }
+    });
+
+    this.worldItems.forEach((item, idx) => {
+      if (item.y < this.game.height - 100) {
+        this.worldItems[idx].y += 3;
+      } else if (item.y > this.game.height - 100) {
+        this.worldItems[idx].y = this.game.height - 100;
+      }
+      if (item.picked === true) {
+        this.player.gold += item.value;
+        this.worldItems.splice(idx, 1);
       }
     });
   }
 
   draw(context) {
-    [...this.enemies, ...this.worldItems, ...this.projectiles].forEach((item) => {
+    [...this.enemies, ...this.projectiles, ...this.worldItems].forEach((item) => {
       item.draw(context);
     });
   }

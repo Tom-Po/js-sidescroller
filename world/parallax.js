@@ -10,9 +10,9 @@ export default class Parallax {
 
   init() {
     this.addLayer('/bg/bg.png', 1);
-    this.addLayer('/bg/bg-buildings2.png', 3);
+    // this.addLayer('/bg/bg-buildings2.png', 3);
     this.addLayer('/bg/bg-path.png', 5);
-    this.addLayer('/bg/bg-buildings.png', 7, true);
+    // this.addLayer('/bg/bg-buildings.png', 7, true);
     this.addLayer('/bg/bg-sky.png', 7, true);
   }
 

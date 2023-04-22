@@ -86,7 +86,8 @@ export default class Projectile {
       this.calcTrajectory(input);
       this.calcProjectileHead(input);
       if (!this.firing) {
-        this.x = this.entityManager.player.sprite.x;
+        this.x = this.entityManager.player.sprite.x
+              + this.entityManager.player.sprite.spriteWidth / 2;
         this.y = this.entityManager.player.sprite.y;
       }
     }

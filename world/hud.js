@@ -1,3 +1,4 @@
+import GoldCount from './gold';
 import HealthBar from './healthbar';
 
 const gameOver = document.getElementById('gameOver');
@@ -6,6 +7,7 @@ export default class HUD {
   constructor(game) {
     this.game = game;
     this.healthBar = new HealthBar(game);
+    this.goldCount = new GoldCount(game);
   }
 
   update(input) {
@@ -29,6 +31,8 @@ export default class HUD {
 
   draw(context) {
     this.healthBar.update();
+    this.goldCount.update();
     this.healthBar.draw(context);
+    this.goldCount.draw(context);
   }
 }

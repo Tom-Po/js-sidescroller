@@ -13,7 +13,7 @@ export default class Slime extends Enemy {
     this.sprite.x = this.game.width - this.sprite.spriteWidth;
     this.sprite.y = 540 - 16;
     this.sprite.staggerFrames = 30;
-    this.velocity = 3;
+    this.velocity = 1;
   }
 
   die() {

@@ -37,10 +37,12 @@ class Player {
     this.speed = 0;
     this.vy = 0;
     this.weight = 1;
+    this.gold = 0;
   }
 
   die() {
-    this.sprite.setAnimation('death');
+    this.game.state = 'death';
+    this.sprite.isFreezed = true;
     this.game.gameSpeed = 0;
   }
 
@@ -93,7 +95,7 @@ class Player {
       this.speed = 0;
       this.game.gameSpeed = 0;
     }
-    if (input.keys.indexOf('ArrowUp') > -1 && this.onGround()) {
+    if (input.keys.indexOf('Space') > -1 && this.onGround()) {
       this.vy -= 20;
     }
     if (input.keys.indexOf('Space') > -1) {
@@ -147,12 +149,16 @@ class Player {
     this.sprite.showBox = this.weapon.sprite.showBox = this.game.debug;
     this.manageInput(input);
     this.updatePosition();
+
+    for (let i = 0; i < this.game.entityManager.worldItems.length; i++) {
+      if (checkRectangleCollision(this.sprite, this.game.entityManager.worldItems[i])) {
+        this.game.entityManager.worldItems[i].picked = true;
+      }
+    }
     // Block animation on lastframe of death and trigger death screen
     // avoid sprite position cycle again
     if (this.sprite.currentAnimation === 'death' && this.sprite.position === 9) {
-      this.game.state = 'death';
-      this.sprite.isFreezed = true;
-      this.game.gameSpeed = 0;
+      this.die();
     }
     this.weapon.update();
     // this.projectile.update(input);

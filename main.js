@@ -11,8 +11,9 @@ import Game from './Game';
 // le marteau doit être aussi un shotgun
 // le shotgun fait du coup des attack à distance
 
-// TODO
-// Decoreller movement x y du sprite, garder animation
+// Théo
+
+// Ramasser la thune auto - arbre de talent
 
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
