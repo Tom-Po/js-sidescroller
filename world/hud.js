@@ -1,13 +1,13 @@
-import GoldCount from './gold';
 import HealthBar from './healthbar';
 
 const gameOver = document.getElementById('gameOver');
+const gold = new Image();
+gold.src = '/sprites/item/gold.png';
 
 export default class HUD {
   constructor(game) {
     this.game = game;
     this.healthBar = new HealthBar(game);
-    this.goldCount = new GoldCount(game);
   }
 
   update(input) {
@@ -31,8 +31,11 @@ export default class HUD {
 
   draw(context) {
     this.healthBar.update();
-    this.goldCount.update();
     this.healthBar.draw(context);
-    this.goldCount.draw(context);
+
+    context.drawImage(gold, 0, 32, 32, 32);
+    context.font = '20px arial';
+    context.fillStyle = 'white';
+    context.fillText(this.game.player.gold, 32, 64);
   }
 }

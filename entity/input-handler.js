@@ -11,6 +11,7 @@ export default class InputHandler {
       if (!this.keys.includes(value)) {
         this.keys.push(value);
       }
+      if (value === 'Tab') e.preventDefault();
     });
     window.addEventListener('keyup', (e) => {
       const value = e.code === 'Space' ? e.code : e.key;

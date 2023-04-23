@@ -1,0 +1,24 @@
+{
+    "healthPotion": {
+        "itemType": "health-potion",
+        "image": "/sprites/item/red-potion.png",
+        "inventory": true
+    },
+    "manaPotion": {
+        "itemType": "mana-potion",
+        "image": "/sprites/item/blue-potion.png",
+        "inventory": true
+    },
+    "gold": {
+        "itemType": "gold",
+        "image": "/sprites/item/gold.png",
+        "inventory": false,
+        "value": 1
+    },
+    "dollar": {
+        "itemType": "dollar",
+        "image": "/sprites/item/dollar.png",
+        "inventory": false,
+        "value": 10
+    }
+}

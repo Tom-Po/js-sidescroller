@@ -1,6 +1,6 @@
 import EntityManager from './entity/entity-manager';
 import InputHandler from './entity/input-handler';
-import Player from './entity/player.js';
+import Player from './entity/player';
 import HUD from './world/hud';
 import Parallax from './world/parallax';
 
@@ -28,7 +28,7 @@ export default class Game {
     this.HUD = new HUD(this);
     this.score = 0;
     this.state = 'playing';
-
+    this.showInventory = false;
     this.debug = false;
     this.logPerformances = true;
 
@@ -36,7 +36,6 @@ export default class Game {
   }
 
   restart() {
-    score.innerHTML = 0;
     this.player = new Player(this);
     this.parallax = new Parallax(this);
     this.entityManager = new EntityManager(this);

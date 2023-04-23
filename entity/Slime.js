@@ -16,10 +16,6 @@ export default class Slime extends Enemy {
     this.velocity = 1;
   }
 
-  die() {
-    this.alive = false;
-  }
-
   update() {
     this.sprite.showBox = this.game.debug;
 

@@ -1,5 +1,6 @@
 import PlayerSprites from '../player.json';
 import { checkRectangleCollision } from '../utils';
+import Inventory from '../world/inventory';
 import AnimatedSprite from './animated-sprite';
 import Spell from './spell';
 import Weapon from './weapon';
@@ -22,10 +23,12 @@ class Player {
     this.sprite.flippedImage = new Image();
     this.sprite.flippedImage.src = PlayerSprites.rogue.reverseImage;
 
-    this.baseHp = 6;
-    this.maxHp = 6;
-    this.baseArmor = 2;
-    this.moveSpeed = 0.3;
+    this.stats = {
+      baseHp: 6,
+      maxHp: 6,
+      baseArmor: 2,
+      moveSpeed: 0.3,
+    };
 
     this.isJumping = false;
     this.jumpVelocity = 1;
@@ -37,7 +40,10 @@ class Player {
     this.speed = 0;
     this.vy = 0;
     this.weight = 1;
+
     this.gold = 0;
+
+    this.inventory = new Inventory(game);
   }
 
   die() {
@@ -47,12 +53,12 @@ class Player {
   }
 
   getHit() {
-    if (this.baseArmor > 0) {
-      this.baseArmor--;
+    if (this.stats.baseArmor > 0) {
+      this.stats.baseArmor--;
       return;
     }
-    this.baseHp--;
-    if (this.baseHp === 0) {
+    this.stats.baseHp--;
+    if (this.stats.baseHp === 0) {
       this.die();
     }
   }
@@ -79,6 +85,9 @@ class Player {
 
   manageInput(input) {
     // Inputs
+    // Inventory
+    // this.game.showInventory = input.keys.indexOf('Tab') > -1;
+    this.game.showInventory = true;
     // Idle
     if (!input.keys.length && !this.sprite.currentAnimation === 'death') {
       this.sprite.setAnimation('idle');
@@ -95,11 +104,12 @@ class Player {
       this.speed = 0;
       this.game.gameSpeed = 0;
     }
-    if (input.keys.indexOf('Space') > -1 && this.onGround()) {
+    if (input.keys.indexOf('z') > -1 && this.onGround()) {
       this.vy -= 20;
     }
     if (input.keys.indexOf('Space') > -1) {
       this.weapon.sprite.isFreezed = false;
+      this.sprite.setAnimation('attack');
       for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
         if (checkRectangleCollision(
           this.weapon.sprite,
@@ -111,14 +121,16 @@ class Player {
     } else {
       this.weapon.sprite.isFreezed = true;
       this.weapon.sprite.position = 0;
+      if (this.sprite.currentAnimation === 'attack' && this.sprite.position === 0) {
+        this.sprite.setAnimation('walk');
+      }
     }
 
     // Casting
-    if (input.keys.indexOf('e') > -1) {
-      this.spell.isCasting = true;
+    this.spell.isCasting = input.keys.indexOf('e') > -1;
+    if (this.spell.isCasting) {
       this.spell.spellDamageCheck(this.game.entityManager.enemies);
     } else {
-      this.spell.isCasting = false;
       this.spellCooldown--;
     }
   }
@@ -151,8 +163,15 @@ class Player {
     this.updatePosition();
 
     for (let i = 0; i < this.game.entityManager.worldItems.length; i++) {
-      if (checkRectangleCollision(this.sprite, this.game.entityManager.worldItems[i])) {
-        this.game.entityManager.worldItems[i].picked = true;
+      const currentItem = this.game.entityManager.worldItems[i];
+      if (checkRectangleCollision(this.sprite, currentItem)) {
+        currentItem.picked = true;
+        if (currentItem.inventory === true) {
+          this.inventory.addItem(currentItem);
+        }
+        if (currentItem.value) {
+          this.gold += currentItem.value;
+        }
       }
     }
     // Block animation on lastframe of death and trigger death screen
@@ -169,7 +188,8 @@ class Player {
     // this.projectile.draw(context);
     this.spell.draw(context);
     this.sprite.draw(context);
-    this.weapon.draw(context);
+    // this.weapon.draw(context);
+    this.inventory.draw(context);
   }
 }
 

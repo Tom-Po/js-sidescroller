@@ -1,5 +1,6 @@
+import Items from '../items.json';
 import Bat from './bat';
-import Item from './item';
+import Item from './item/item';
 import Projectile from './projectile';
 import Slime from './slime';
 
@@ -9,21 +10,19 @@ const dollar = new Image();
 dollar.src = './sprites/item/dollar.png';
 
 // Stable FPS 120 upto 1K - 10K = 30fps
-const ENEMY_COUNT = 100;
+const ENEMY_COUNT = 10;
 const ENEMY_POP_RATE = 1000;
 const DROP_RATE = 20;
-
-const score = document.getElementById('score');
 
 function getRandomEnemy(game) {
   return Math.random() > 0.5 ? new Bat(game) : new Slime(game);
 }
 
 function getRandomLoot(position) {
-  const loot = Math.random() < 0.2
-    ? { img: dollar, value: 10 }
-    : { img: gold, value: 1 };
-  return new Item(loot.img, 1.5, position.x, position.y, loot.value);
+  const lootPool = Object.keys(Items);
+  const rng = Math.floor(Math.random() * lootPool.length) % lootPool.length;
+  const loot = Items[lootPool[rng]];
+  return new Item(loot, 1.5, position.x, position.y);
 }
 
 export default class EntityManager {
@@ -91,7 +90,6 @@ export default class EntityManager {
       enemy.update();
       if (!enemy.alive) {
         this.game.score++;
-        score.innerHTML = this.game.score;
         this.enemies.splice(idx, 1);
         if (Math.random() < DROP_RATE / 100) {
           const loot = getRandomLoot(enemy.sprite);
@@ -108,7 +106,6 @@ export default class EntityManager {
         this.worldItems[idx].y = this.game.height - 100;
       }
       if (item.picked === true) {
-        this.player.gold += item.value;
         this.worldItems.splice(idx, 1);
       }
     });

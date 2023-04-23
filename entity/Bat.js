@@ -26,12 +26,11 @@ export default class Bat extends Enemy {
     this.attackRange = 100;
   }
 
-  die() {
-    this.alive = false;
-  }
-
   update() {
-    this.sprite.showBox = this.game.debug;
+    if (this.game.debug) {
+      this.sprite.showBox = true;
+    }
+
     if (this.game.state === 'paused' || this.game.state === 'death') return;
     this.velocity += this.game.score / this.game.entityManager.enemies.length / 100;
     if (this.sprite.x < this.player.sprite.x) {

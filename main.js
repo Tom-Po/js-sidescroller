@@ -14,10 +14,12 @@ import Game from './game';
 // POLO
 // ARBRE DE TALENT
 // URGENT
-// SINON PA PY
+// SINON PA PaY
+
+// SIMON
+// SKill tree voir POE
 
 // Théo
-
 // Ramasser la thune auto - arbre de talent
 
 const canvas = document.getElementById('canvas1');

@@ -21,6 +21,11 @@ export default class Enemy {
     this.attackRange = 200;
   }
 
+  die() {
+    this.alive = false;
+    this.sprite.showBox = true;
+  }
+
   attackPlayer() {
     this.alive = false;
     this.player.getHit();
