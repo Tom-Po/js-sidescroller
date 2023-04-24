@@ -13,6 +13,8 @@ export default class HUD {
   update(input) {
     if (this.game.state === 'death') {
       gameOver.style.display = 'flex';
+      const gameOverScore = document.getElementById('gameOverScore');
+      gameOverScore.innerText = this.game.score;
     }
     if (input.keys.indexOf('Escape') > -1) {
       if (this.game.state === 'death') {

@@ -1,4 +1,4 @@
-import Enemies from '../enemies.json';
+import Enemies from '../data/enemies.json';
 import { checkRadialCollision, checkRectangleCollision } from '../utils';
 import AnimatedSprite from './animated-sprite';
 import Enemy from './enemy';
@@ -41,10 +41,10 @@ export default class Bat extends Enemy {
       this.sprite.flip();
     }
 
-    if (this.sprite.y < this.game.height - 100) {
-      this.directionRatioY = 1;
-    } else {
+    if (this.sprite.y > this.game.height - 100) {
       this.directionRatioY = -1;
+    } else {
+      this.directionRatioY = 1;
     }
     const {
       velocity, directionRatioX, directionRatioY, game,

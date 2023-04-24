@@ -1,4 +1,6 @@
-import Items from '../items.json';
+import Animations from '../data/animations.json';
+import Items from '../data/items.json';
+import AnimatedSprite from './animated-sprite';
 import Bat from './bat';
 import Item from './item/item';
 import Projectile from './projectile';
@@ -10,7 +12,7 @@ const dollar = new Image();
 dollar.src = './sprites/item/dollar.png';
 
 // Stable FPS 120 upto 1K - 10K = 30fps
-const ENEMY_COUNT = 10;
+const ENEMY_COUNT = 50;
 const ENEMY_POP_RATE = 1000;
 const DROP_RATE = 20;
 
@@ -37,6 +39,8 @@ export default class EntityManager {
       this,
     )];
 
+    this.explosions = [];
+
     this.worldItems = [];
 
     for (let i = 0; i < ENEMY_COUNT; i++) {
@@ -44,8 +48,11 @@ export default class EntityManager {
     }
   }
 
-  addWorldItem(item) {
-    this.worldItems.push(item);
+  addWorldItem(position) {
+    if (Math.random() < DROP_RATE / 100) {
+      const loot = getRandomLoot(position);
+      this.worldItems.push(loot);
+    }
   }
 
   addProjectile() {
@@ -56,6 +63,15 @@ export default class EntityManager {
       this,
       this.player.sprite.x + this.player.sprite.spriteWidth,
       this.player.sprite.y,
+    ));
+  }
+
+  addExplosion(position) {
+    this.explosions.push(new AnimatedSprite(
+      Animations.explosion.image,
+      Animations.explosion.animationStates,
+      position.x,
+      position.y,
     ));
   }
 
@@ -89,30 +105,40 @@ export default class EntityManager {
     this.enemies.forEach((enemy, idx) => {
       enemy.update();
       if (!enemy.alive) {
-        this.game.score++;
-        this.enemies.splice(idx, 1);
-        if (Math.random() < DROP_RATE / 100) {
-          const loot = getRandomLoot(enemy.sprite);
-          this.addWorldItem(loot);
+        if (enemy.killed) {
+          this.game.score++;
+          this.addExplosion(enemy.sprite);
+          this.addWorldItem(enemy.sprite);
         }
+        this.enemies.splice(idx, 1);
         this.addEnemy();
       }
     });
 
     this.worldItems.forEach((item, idx) => {
-      if (item.y < this.game.height - 100) {
+      if (item.y < 520) {
         this.worldItems[idx].y += 3;
-      } else if (item.y > this.game.height - 100) {
-        this.worldItems[idx].y = this.game.height - 100;
+      } else if (item.y > 520) {
+        this.worldItems[idx].y = 520;
       }
       if (item.picked === true) {
         this.worldItems.splice(idx, 1);
       }
     });
+    this.explosions.forEach((expl, index) => {
+      if (expl.position === 3) {
+        this.explosions.splice(index, 1);
+      }
+    });
   }
 
   draw(context) {
-    [...this.enemies, ...this.projectiles, ...this.worldItems].forEach((item) => {
+    [
+      ...this.enemies,
+      ...this.projectiles,
+      ...this.worldItems,
+      ...this.explosions,
+    ].forEach((item) => {
       item.draw(context);
     });
   }

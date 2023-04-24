@@ -1,0 +1,12 @@
+{
+    "explosion": {
+        "image": "/sprites/animation/explosion.png",
+        "reverseImage": "/sprites/animation/explosion.png",
+        "animationStates": [
+            {
+                "name": "explode",
+                "frames": 4
+            }
+        ]
+    }
+}

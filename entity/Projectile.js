@@ -1,6 +1,6 @@
 import { angleBetween, checkRectangleCollision } from '../utils';
 
-const groundPoint = 540;
+const groundPoint = 553;
 
 // Projectile prototype
 export default class Projectile {

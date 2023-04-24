@@ -5,7 +5,9 @@ export default class Inventory {
     this.height = 330;
     this.width = 332;
     this.x = 0;
-    this.y = this.game.height - this.height;
+    this.y = this.game.height;
+    // closed - open
+    this.open = false;
   }
 
   addItem(item, quantity = 1) {
@@ -21,8 +23,12 @@ export default class Inventory {
   }
 
   draw(context) {
-    // context.drawRect
-    if (!this.game.showInventory) return;
+    if (this.open) {
+      this.y -= 30;
+      if (this.y < this.game.height - this.height) this.y = this.game.height - this.height;
+    } else if (!this.open && this.y < this.game.height) {
+      this.y += 20;
+    }
     context.fillStyle = '#27242e';
     context.fillRect(this.x, this.y, this.width, this.height);
     context.font = '20px arial';
@@ -55,6 +61,7 @@ export default class Inventory {
           this.items[i].spriteWidth * this.items[i].scale,
           this.items[i].spriteHeight * this.items[i].scale,
         );
+
         context.fillStyle = 'white';
         context.font = '20px monospace bold';
         context.fillText(

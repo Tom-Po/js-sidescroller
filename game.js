@@ -28,7 +28,6 @@ export default class Game {
     this.HUD = new HUD(this);
     this.score = 0;
     this.state = 'playing';
-    this.showInventory = false;
     this.debug = false;
     this.logPerformances = true;
 

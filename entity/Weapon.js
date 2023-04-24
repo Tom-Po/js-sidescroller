@@ -1,4 +1,4 @@
-import Weapons from '../weapons.json';
+import Weapons from '../data/weapons.json';
 import AnimatedSprite from './animated-sprite';
 
 export default class Weapon {

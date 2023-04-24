@@ -13,6 +13,7 @@ export default class Sprite {
       context.strokeStyle = 'red';
       context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
+
     context.drawImage(
       this.image,
       this.x,

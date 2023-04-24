@@ -1,4 +1,4 @@
-import Enemies from '../enemies.json';
+import Enemies from '../data/enemies.json';
 import AnimatedSprite from './animated-sprite';
 
 export default class Enemy {
@@ -19,10 +19,14 @@ export default class Enemy {
     this.alive = true;
     this.attacking = false;
     this.attackRange = 200;
+    this.killed = false;
+    this.sprite.showHitBox = true;
   }
 
   die() {
     this.alive = false;
+    this.killed = true;
+    this.sprite.showHitBox = true;
     this.sprite.showBox = true;
   }
 

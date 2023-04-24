@@ -41,6 +41,7 @@
 
 #canvas1 {
     z-index: 100;
+    image-rendering: pixelated;
 }
 
 .key {

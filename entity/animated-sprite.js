@@ -12,7 +12,7 @@ class AnimatedSprite {
     this.spriteWidth = 64;
     this.spriteHeight = 64;
 
-    this.currentAnimation = 'walk';
+    this.currentAnimation = animationStates[0].name;
     this.animationStates = animationStates;
     this.position = 0;
 
@@ -25,6 +25,7 @@ class AnimatedSprite {
 
     this.isFlipped = false;
     this.isFreezed = false;
+    this.showHitBox = false;
   }
 
   flip() {
@@ -57,6 +58,10 @@ class AnimatedSprite {
     if (this.showBox) {
       context.strokeStyle = 'red';
       context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
+    }
+    if (this.showHitBox) {
+      context.fillStyle = 'red';
+      context.fillRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
     if (!this.isFreezed) {
       this.position = Math.floor(

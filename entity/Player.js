@@ -1,4 +1,4 @@
-import PlayerSprites from '../player.json';
+import PlayerSprites from '../data/player.json';
 import { checkRectangleCollision } from '../utils';
 import Inventory from '../world/inventory';
 import AnimatedSprite from './animated-sprite';
@@ -6,19 +6,20 @@ import Spell from './spell';
 import Weapon from './weapon';
 
 const MAX_JUMP_HEIGHT = 200;
-
-class Player {
+const GROUND_LEVEL = 497;
+export default class Player {
   constructor(game) {
     this.game = game;
     this.sprite = new AnimatedSprite(
       PlayerSprites.rogue.image,
       PlayerSprites.rogue.animationStates,
+      3,
     );
     this.sprite.setAnimation('walk');
     this.sprite.staggerFrames = 10;
-
     this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2;
-    this.playerBaseHeight = game.height - this.sprite.spriteHeight - 40;
+
+    this.playerBaseHeight = game.height - 103;
     this.sprite.y = this.playerBaseHeight;
     this.sprite.flippedImage = new Image();
     this.sprite.flippedImage.src = PlayerSprites.rogue.reverseImage;
@@ -59,7 +60,7 @@ class Player {
     }
     this.stats.baseHp--;
     if (this.stats.baseHp === 0) {
-      this.die();
+      this.sprite.setAnimation('death');
     }
   }
 
@@ -86,8 +87,7 @@ class Player {
   manageInput(input) {
     // Inputs
     // Inventory
-    // this.game.showInventory = input.keys.indexOf('Tab') > -1;
-    this.game.showInventory = true;
+    this.inventory.open = input.keys.indexOf('Tab') > -1;
     // Idle
     if (!input.keys.length && !this.sprite.currentAnimation === 'death') {
       this.sprite.setAnimation('idle');
@@ -115,6 +115,7 @@ class Player {
           this.weapon.sprite,
           this.game.entityManager.enemies[i].sprite,
         )) {
+          this.game.entityManager.enemies[i].killed = true;
           this.game.entityManager.enemies[i].die();
         }
       }
@@ -122,7 +123,7 @@ class Player {
       this.weapon.sprite.isFreezed = true;
       this.weapon.sprite.position = 0;
       if (this.sprite.currentAnimation === 'attack' && this.sprite.position === 0) {
-        this.sprite.setAnimation('walk');
+        this.sprite.setAnimation('idle');
       }
     }
 
@@ -146,8 +147,8 @@ class Player {
     // Vertical move
     this.sprite.y += this.vy;
     if (!this.onGround()) {
-      if (this.sprite.y < this.playerBaseHeight - MAX_JUMP_HEIGHT) {
-        this.sprite.y = this.playerBaseHeight - MAX_JUMP_HEIGHT;
+      if (this.sprite.y < GROUND_LEVEL - MAX_JUMP_HEIGHT) {
+        this.sprite.y = GROUND_LEVEL - MAX_JUMP_HEIGHT;
       }
       this.vy += this.weight;
     } else {
@@ -192,5 +193,3 @@ class Player {
     this.inventory.draw(context);
   }
 }
-
-export default Player;
