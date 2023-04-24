@@ -1,10 +1,10 @@
 import Animations from '../data/animations.json';
 import Items from '../data/items.json';
-import AnimatedSprite from './animated-sprite';
-import Bat from './bat';
-import Item from './item/item';
-import Projectile from './projectile';
-import Slime from './slime';
+import AnimatedSprite from '../entity/animated-sprite';
+import Bat from '../entity/enemy/bat';
+import Slime from '../entity/enemy/slime';
+import Item from '../entity/item/item';
+import Projectile from '../entity/projectile';
 
 const gold = new Image();
 gold.src = './sprites/item/gold.png';

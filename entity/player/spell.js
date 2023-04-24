@@ -1,4 +1,4 @@
-import { checkRadialCollision } from '../utils';
+import { checkRadialCollision } from '../../utils';
 
 const SPELL_DURATION_BASE = 500;
 const SPELL_COOLDOWN_BASE = 100;

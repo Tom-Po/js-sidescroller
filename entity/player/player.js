@@ -1,9 +1,9 @@
-import PlayerSprites from '../data/player.json';
-import { checkRectangleCollision } from '../utils';
-import Inventory from '../world/inventory';
-import AnimatedSprite from './animated-sprite';
+import PlayerSprites from '../../data/player.json';
+import { checkRectangleCollision } from '../../utils';
+import AnimatedSprite from '../animated-sprite';
+import Weapon from '../item/weapon';
+import Inventory from './inventory';
 import Spell from './spell';
-import Weapon from './weapon';
 
 const MAX_JUMP_HEIGHT = 200;
 const GROUND_LEVEL = 497;
