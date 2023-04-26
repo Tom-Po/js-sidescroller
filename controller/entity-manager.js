@@ -4,6 +4,7 @@ import AnimatedSprite from '../entity/animated-sprite';
 import Bat from '../entity/enemy/bat';
 import Slime from '../entity/enemy/slime';
 import Item from '../entity/item/item';
+import Player from '../entity/player/player';
 import Projectile from '../entity/projectile';
 
 const gold = new Image();
@@ -12,7 +13,7 @@ const dollar = new Image();
 dollar.src = './sprites/item/dollar.png';
 
 // Stable FPS 120 upto 1K - 10K = 30fps
-const ENEMY_COUNT = 50;
+const ENEMY_COUNT = 100;
 const ENEMY_POP_RATE = 1000;
 const DROP_RATE = 20;
 
@@ -30,7 +31,7 @@ function getRandomLoot(position) {
 export default class EntityManager {
   constructor(game) {
     this.game = game;
-    this.player = game.player;
+    this.player = new Player(game);
 
     this.enemies = [];
     this.enemyPopRate = ENEMY_POP_RATE;
@@ -61,7 +62,7 @@ export default class EntityManager {
     }
     this.projectiles.push(new Projectile(
       this,
-      this.player.sprite.x + this.player.sprite.spriteWidth,
+      this.player.sprite.x + this.player.sprite.width,
       this.player.sprite.y,
     ));
   }
@@ -93,6 +94,7 @@ export default class EntityManager {
       this.enemyPopRate -= Math.floor(this.game.score / 100);
       this.addEnemy();
     }
+    this.player.update(input);
 
     this.projectiles.forEach((p) => {
       const before = p.fired;
@@ -103,7 +105,7 @@ export default class EntityManager {
     });
 
     this.enemies.forEach((enemy, idx) => {
-      enemy.update();
+      enemy.update(this.player);
       if (!enemy.alive) {
         if (enemy.killed) {
           this.game.score++;
@@ -130,10 +132,14 @@ export default class EntityManager {
         this.explosions.splice(index, 1);
       }
     });
+    this.worldItems.forEach((item) => {
+      item.update();
+    });
   }
 
   draw(context) {
     [
+      this.player,
       ...this.enemies,
       ...this.projectiles,
       ...this.worldItems,

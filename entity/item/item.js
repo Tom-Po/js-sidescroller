@@ -11,6 +11,10 @@ export default class Item extends Sprite {
     this.inventory = item.inventory;
   }
 
+  update() {
+    console.log('updated loot');
+  }
+
   consume() {
     console.log(this);
     console.log('has been consummed');

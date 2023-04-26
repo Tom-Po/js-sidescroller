@@ -1,5 +1,5 @@
 import Enemies from '../../data/enemies.json';
-import { checkRectangleCollision } from '../../utils';
+import { isOutside } from '../../utils';
 import AnimatedSprite from '../animated-sprite';
 import Enemy from './enemy';
 
@@ -8,15 +8,15 @@ export default class Slime extends Enemy {
     super(game);
     this.sprite = new AnimatedSprite(Enemies.slime.image, Enemies.slime.animationStates);
     this.sprite.staggerFrames = 15;
-    this.sprite.spriteHeight = 32;
-    this.sprite.spriteWidth = 32;
-    this.sprite.x = this.game.width - this.sprite.spriteWidth;
+    this.sprite.height = 32;
+    this.sprite.width = 32;
+    this.sprite.x = this.game.width - this.sprite.width;
     this.sprite.y = 530;
     this.sprite.staggerFrames = 30;
     this.velocity = 1;
   }
 
-  update() {
+  update(player) {
     this.sprite.showBox = this.game.debug;
 
     if (this.game.state === 'paused' || this.game.state === 'death') return;
@@ -31,7 +31,7 @@ export default class Slime extends Enemy {
 
     this.sprite.x -= step;
 
-    if (checkRectangleCollision(this.sprite, this.player.sprite)) {
+    if (!isOutside(this.sprite, player.sprite)) {
       this.attackPlayer();
     }
   }

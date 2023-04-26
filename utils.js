@@ -1,13 +1,27 @@
 const checkRadialCollision = (p1x, p1y, r1, p2x, p2y, r2) => (
   (r1 + r2) ** 2 > (p1x - p2x) ** 2 + (p1y - p2y) ** 2
 );
-// Sprite 1 & 2
-const checkRectangleCollision = (s1, s2) => (
-  s1.x < s2.x + s2.spriteWidth
-    && s1.x + s1.spriteWidth > s2.x
-    && s1.y < s2.y + s2.spriteHeight
-    && s1.spriteHeight + s1.y > s2.y
+
+const checkRectangleCollision = (entity1, entity2) => (
+  entity1.x < entity2.x + entity2.width
+    && entity1.x + entity1.width > entity2.x
+    && entity1.y < entity2.y + entity2.height
+    && entity1.width + entity1.y > entity2.y
 );
+const isOutside = (entity1, entity2) => (
+  entity1.x + entity1.width < entity2.x
+  || entity1.x > entity2.x + entity2.width
+  || entity1.y + entity1.height < entity2.y
+  || entity1.y > entity2.y + entity2.height
+);
+
+// const checkRectangleCollisionAlt =  (s1, entity2) => (
+//   s1.x + s1.width > entity2.x
+//   || s1.x > s2.x
+//   ||s1.y < s2.y + s2.height
+//     && s1.width + s1.y > s2.y
+// );
+
 // calculate distance between two points
 const distBetween = (p1, p2) => Math.sqrt((p2.x - p1.x) ** 2
   + (p2.y - p1.y) ** 2);
@@ -49,4 +63,5 @@ export {
   angleBetween,
   getAimCoords,
   isInCircle,
+  isOutside,
 };

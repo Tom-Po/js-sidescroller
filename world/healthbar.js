@@ -14,7 +14,7 @@ export default class HealthBar {
 
   update() {
     this.heartContainers = [];
-    const { maxHp, baseHp, baseArmor } = this.game.player.stats;
+    const { maxHp, baseHp, baseArmor } = this.game.entityManager.player.stats;
     const maxLife = maxHp + baseArmor;
     for (let i = 0; i < maxLife; i++) {
       if (i < baseHp) {

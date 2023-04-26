@@ -32,12 +32,12 @@ export default class HUD {
   }
 
   draw(context) {
-    this.healthBar.update();
+    this.healthBar.update(this.game.entityManager.player);
     this.healthBar.draw(context);
 
     context.drawImage(gold, 0, 32, 32, 32);
     context.font = '20px arial';
     context.fillStyle = 'white';
-    context.fillText(this.game.player.gold, 32, 64);
+    context.fillText(this.game.entityManager.player.gold, 32, 64);
   }
 }

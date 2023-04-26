@@ -11,12 +11,12 @@ export default class Layer {
   }
 
   update() {
-    this.speed = this.game.gameSpeed * this.speedModifier;
+    this.speed = this.game.gameSpeed * this.speedModifier * 2;
     if (this.x <= -this.width || this.x >= this.width) {
       this.x = 0;
     }
     this.x = Math.floor(this.x - this.speed);
-    // this.x = gameFrame * this.speed % this.width
+    // this.x = (this.game.gameFrame * this.speed) % this.width;
   }
 
   draw(ctx) {

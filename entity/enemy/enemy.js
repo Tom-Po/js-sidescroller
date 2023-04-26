@@ -4,7 +4,6 @@ import AnimatedSprite from '../animated-sprite';
 export default class Enemy {
   constructor(game) {
     this.game = game;
-    this.player = this.game.player;
     this.sprite = new AnimatedSprite(
       Enemies.bat.image,
       Enemies.bat.animationStates,
@@ -32,7 +31,7 @@ export default class Enemy {
 
   attackPlayer() {
     this.alive = false;
-    this.player.getHit();
+    this.game.entityManager.player.getHit();
   }
 
   draw(context) {

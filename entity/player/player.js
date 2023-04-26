@@ -1,5 +1,5 @@
 import PlayerSprites from '../../data/player.json';
-import { checkRectangleCollision } from '../../utils';
+import { isOutside } from '../../utils';
 import AnimatedSprite from '../animated-sprite';
 import Weapon from '../item/weapon';
 import Inventory from './inventory';
@@ -7,6 +7,7 @@ import Spell from './spell';
 
 const MAX_JUMP_HEIGHT = 200;
 const GROUND_LEVEL = 497;
+
 export default class Player {
   constructor(game) {
     this.game = game;
@@ -17,7 +18,7 @@ export default class Player {
     );
     this.sprite.setAnimation('walk');
     this.sprite.staggerFrames = 10;
-    this.sprite.x = game.width / 2 - this.sprite.spriteWidth / 2;
+    this.sprite.x = game.width / 2 - this.sprite.width / 2;
 
     this.playerBaseHeight = game.height - 103;
     this.sprite.y = this.playerBaseHeight;
@@ -30,9 +31,6 @@ export default class Player {
       baseArmor: 2,
       moveSpeed: 0.3,
     };
-
-    this.isJumping = false;
-    this.jumpVelocity = 1;
 
     this.spell = new Spell(this);
     this.weapon = new Weapon(this);
@@ -69,7 +67,7 @@ export default class Player {
   }
 
   moveLeft() {
-    this.speed = !this.onGround() ? -10 : -5;
+    this.speed = -5;
     this.game.gameSpeed = -0.3;
     this.sprite.flip();
     this.weapon.sprite.flip();
@@ -77,7 +75,7 @@ export default class Player {
   }
 
   moveRight() {
-    this.speed = !this.onGround() ? 10 : 5;
+    this.speed = 5;
     this.game.gameSpeed = 0.3;
     this.sprite.unflip();
     this.weapon.sprite.unflip();
@@ -111,7 +109,7 @@ export default class Player {
       this.weapon.sprite.isFreezed = false;
       this.sprite.setAnimation('attack');
       for (let i = 0; i < this.game.entityManager.enemies.length; i++) {
-        if (checkRectangleCollision(
+        if (!isOutside(
           this.weapon.sprite,
           this.game.entityManager.enemies[i].sprite,
         )) {
@@ -140,8 +138,8 @@ export default class Player {
     // Horizontal move
     this.sprite.x += this.speed;
     if (this.sprite.x < 0) this.sprite.x = 0;
-    else if (this.sprite.x > this.game.width - this.sprite.spriteWidth) {
-      this.sprite.x = this.game.width - this.sprite.spriteWidth;
+    else if (this.sprite.x > this.game.width - this.sprite.width) {
+      this.sprite.x = this.game.width - this.sprite.width;
     }
 
     // Vertical move
@@ -165,7 +163,7 @@ export default class Player {
 
     for (let i = 0; i < this.game.entityManager.worldItems.length; i++) {
       const currentItem = this.game.entityManager.worldItems[i];
-      if (checkRectangleCollision(this.sprite, currentItem)) {
+      if (!isOutside(this.sprite, currentItem)) {
         currentItem.picked = true;
         if (currentItem.inventory === true) {
           this.inventory.addItem(currentItem);
@@ -175,14 +173,16 @@ export default class Player {
         }
       }
     }
+
     // Block animation on lastframe of death and trigger death screen
     // avoid sprite position cycle again
     if (this.sprite.currentAnimation === 'death' && this.sprite.position === 9) {
       this.die();
+    } else {
+      this.weapon.update();
+      // this.projectile.update(input);
+      this.spell.update(input);
     }
-    this.weapon.update();
-    // this.projectile.update(input);
-    this.spell.update(input);
   }
 
   draw(context) {

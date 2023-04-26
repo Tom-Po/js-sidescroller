@@ -58,8 +58,8 @@ export default class Inventory {
           this.items[i].image,
           this.x + padding + col * cellSize,
           this.y + padding + row * cellSize - 2,
-          this.items[i].spriteWidth * this.items[i].scale,
-          this.items[i].spriteHeight * this.items[i].scale,
+          this.items[i].width * this.items[i].scale,
+          this.items[i].height * this.items[i].scale,
         );
 
         context.fillStyle = 'white';

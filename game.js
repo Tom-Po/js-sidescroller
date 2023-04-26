@@ -1,6 +1,5 @@
 import EntityManager from './controller/entity-manager';
 import InputHandler from './controller/input-handler';
-import Player from './entity/player/player';
 import HUD from './world/hud';
 import Parallax from './world/parallax';
 
@@ -19,13 +18,10 @@ export default class Game {
     this.deltaTime = 0;
 
     this.inputHandler = new InputHandler();
-
-    this.player = new Player(this);
     this.entityManager = new EntityManager(this);
-
     this.parallax = new Parallax(this);
-
     this.HUD = new HUD(this);
+
     this.score = 0;
     this.state = 'playing';
     this.debug = false;
@@ -35,7 +31,6 @@ export default class Game {
   }
 
   restart() {
-    this.player = new Player(this);
     this.parallax = new Parallax(this);
     this.entityManager = new EntityManager(this);
     this.inputHandler = new InputHandler();
@@ -57,7 +52,6 @@ export default class Game {
     this.lastTime = timestamp;
 
     this.entityManager.update(this.inputHandler);
-    this.player.update(this.inputHandler);
     this.HUD.update(this.inputHandler);
   }
 
@@ -65,8 +59,6 @@ export default class Game {
     this.parallax.draw(ctx);
 
     this.entityManager.draw(ctx);
-
-    this.player.draw(ctx);
 
     this.parallax.drawForeground(ctx);
     this.HUD.draw(ctx);

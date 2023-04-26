@@ -1,4 +1,4 @@
-import { angleBetween, checkRectangleCollision } from '../utils';
+import { angleBetween, isOutside } from '../utils';
 
 const groundPoint = 553;
 
@@ -47,11 +47,11 @@ export default class Projectile {
       this.x += this.velX;
       this.y += this.velY;
       for (let i = 0; i < this.entityManager.enemies.length; i++) {
-        if (checkRectangleCollision({
+        if (!isOutside({
           x: this.x,
           y: this.y,
-          spriteWidth: 0,
-          spriteHeight: 0,
+          width: 0,
+          height: 0,
         }, this.entityManager.enemies[i].sprite)) {
           this.entityManager.enemies[i].die();
         }
@@ -87,7 +87,7 @@ export default class Projectile {
       this.calcProjectileHead(input);
       if (!this.firing) {
         this.x = this.entityManager.player.sprite.x
-              + this.entityManager.player.sprite.spriteWidth / 2;
+              + this.entityManager.player.sprite.width / 2;
         this.y = this.entityManager.player.sprite.y;
       }
     }

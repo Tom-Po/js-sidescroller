@@ -28,7 +28,7 @@ export default class Spell {
         this.spellRange,
         enemies[i].sprite.x,
         enemies[i].sprite.y,
-        enemies[i].sprite.spriteWidth,
+        enemies[i].sprite.width,
       );
       if (successfullHit) {
         enemies[i].die();

@@ -9,8 +9,8 @@ class AnimatedSprite {
 
     this.currentImage = this.image;
 
-    this.spriteWidth = 64;
-    this.spriteHeight = 64;
+    this.width = 64;
+    this.height = 64;
 
     this.currentAnimation = animationStates[0].name;
     this.animationStates = animationStates;
@@ -42,8 +42,8 @@ class AnimatedSprite {
         loc: [],
       };
       for (let j = 0; j < state.frames; j++) {
-        const positionX = j * this.spriteWidth;
-        const positionY = index * this.spriteHeight;
+        const positionX = j * this.width;
+        const positionY = index * this.height;
         frames.loc.push({ x: positionX, y: positionY });
       }
       this.spriteAnimations[state.name] = frames;
@@ -57,11 +57,11 @@ class AnimatedSprite {
   draw(context) {
     if (this.showBox) {
       context.strokeStyle = 'red';
-      context.strokeRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
+      context.strokeRect(this.x, this.y, this.width, this.height);
     }
     if (this.showHitBox) {
       context.fillStyle = 'red';
-      context.fillRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
+      context.fillRect(this.x, this.y, this.width, this.height);
     }
     if (!this.isFreezed) {
       this.position = Math.floor(
@@ -69,19 +69,19 @@ class AnimatedSprite {
       ) % this.spriteAnimations[this.currentAnimation].loc.length;
     }
 
-    const frameX = this.spriteWidth * this.position;
+    const frameX = this.width * this.position;
     const frameY = this.spriteAnimations[this.currentAnimation].loc[this.position].y;
 
     context.drawImage(
       this.currentImage,
       frameX,
       frameY,
-      this.spriteWidth,
-      this.spriteHeight,
+      this.width,
+      this.height,
       this.x,
       this.y,
-      this.spriteWidth,
-      this.spriteHeight,
+      this.width,
+      this.height,
     );
     this.gameFrame++;
   }

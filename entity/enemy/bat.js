@@ -1,5 +1,5 @@
 import Enemies from '../../data/enemies.json';
-import { checkRadialCollision, checkRectangleCollision } from '../../utils';
+import { checkRadialCollision, isOutside } from '../../utils';
 import AnimatedSprite from '../animated-sprite';
 import Enemy from './enemy';
 
@@ -15,8 +15,8 @@ export default class Bat extends Enemy {
       Enemies.bat.reverseImage,
     );
 
-    this.sprite.spriteHeight = 42;
-    this.sprite.spriteWidth = 64;
+    this.sprite.height = 42;
+    this.sprite.width = 64;
     this.sprite.staggerFrames = 10;
 
     this.sprite.setAnimation('fly');
@@ -26,14 +26,14 @@ export default class Bat extends Enemy {
     this.attackRange = 100;
   }
 
-  update() {
+  update(player) {
     if (this.game.debug) {
       this.sprite.showBox = true;
     }
 
     if (this.game.state === 'paused' || this.game.state === 'death') return;
     this.velocity += this.game.score / this.game.entityManager.enemies.length / 100;
-    if (this.sprite.x < this.player.sprite.x) {
+    if (this.sprite.x < player.sprite.x) {
       this.directionRatioX = 1;
       this.sprite.unflip();
     } else {
@@ -47,22 +47,22 @@ export default class Bat extends Enemy {
       this.directionRatioY = 1;
     }
     const {
-      velocity, directionRatioX, directionRatioY, game,
+      velocity, directionRatioX, directionRatioY,
     } = this;
 
-    this.sprite.x += (Math.random() - 0.2) * 2 * velocity * directionRatioX - (game.gameSpeed * 2);
+    this.sprite.x += (Math.random() - 0.2) * 2 * velocity * directionRatioX;
     this.sprite.y += (Math.random()) * 2 * velocity * directionRatioY;
 
-    if (checkRectangleCollision(this.sprite, this.game.player.sprite)) {
+    if (!isOutside(this.sprite, player.sprite)) {
       this.attackPlayer();
     }
 
-    this.attacking = checkRadialCollision(
-      (this.sprite.x + this.sprite.spriteWidth) / 2,
-      (this.sprite.y + this.sprite.spriteHeight) / 2,
+    this.attacking = !checkRadialCollision(
+      (this.sprite.x + this.sprite.width) / 2,
+      (this.sprite.y + this.sprite.height) / 2,
       this.attackRange,
-      (this.player.sprite.x + this.player.sprite.spriteWidth) / 2,
-      (this.player.sprite.y + this.player.sprite.spriteHeight) / 2,
+      (player.sprite.x + player.sprite.width) / 2,
+      (player.sprite.y + player.sprite.height) / 2,
       0,
     );
     if (this.attacking) {
